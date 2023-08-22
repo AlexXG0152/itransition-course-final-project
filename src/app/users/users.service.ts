@@ -43,7 +43,15 @@ export class UsersService {
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user ${updateUserDto}`;
+    try {
+      const user = await this.userRepository.update(updateUserDto, {
+        where: { id },
+      });
+
+      return user;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async removeUser(id: number) {

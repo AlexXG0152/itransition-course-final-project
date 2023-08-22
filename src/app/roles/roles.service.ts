@@ -33,7 +33,13 @@ export class RolesService {
   }
 
   async update(value: string, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${value} role ${updateRoleDto}`;
+    try {
+      return await this.roleRepository.update(updateRoleDto, {
+        where: { value },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async remove(value: string) {

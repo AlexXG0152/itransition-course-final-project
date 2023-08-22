@@ -1,4 +1,55 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
+import {
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsEmail()
+  @IsOptional()
+  @IsString()
+  @MinLength(5, { message: 'Email is too short' })
+  @MaxLength(100, { message: 'Email is too long' })
+  @ApiProperty({
+    example: 'mail@mail.com',
+    description: 'Email from 5 to 100 symbols',
+  })
+  readonly email: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50, { message: 'Name is too long' })
+  @ApiProperty({
+    example: 'User',
+    description: 'User name from 0 to 50 symbols',
+  })
+  readonly name: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(6, { message: 'Password is too short' })
+  @MaxLength(30, { message: 'Password is too long' })
+  @ApiProperty({
+    example: 'password',
+    description: 'Password from 6 to 30 symbols',
+  })
+  readonly password: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({ example: 'false', description: 'User blocked or not' })
+  readonly banned: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1, { message: 'Ban reason is too short' })
+  @MaxLength(150, { message: 'Ban reason is too long' })
+  @ApiProperty({ example: 'Fake Info', description: 'Post fake reviews' })
+  readonly banreason: string;
+}

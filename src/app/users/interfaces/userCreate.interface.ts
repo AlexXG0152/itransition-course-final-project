@@ -1,4 +1,4 @@
-export interface IUserCreationAttrs {
+export interface IUserCreateAttrs {
   email: string;
   password: string;
 }

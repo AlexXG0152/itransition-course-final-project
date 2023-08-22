@@ -6,12 +6,12 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { IUserCreationAttrs } from '../interfaces/userCreation.interface';
+import { IUserCreateAttrs } from '../interfaces/userCreate.interface';
 import { Role } from 'src/app/roles/entities/role.entity';
 import { UserRoles } from 'src/app/roles/entities/user-roles.entity';
 
 @Table({ tableName: 'users', paranoid: true })
-export class User extends Model<User, IUserCreationAttrs> {
+export class User extends Model<User, IUserCreateAttrs> {
   @ApiProperty({ example: '1', description: 'UniqID' })
   @Column({
     type: DataType.INTEGER,
@@ -73,7 +73,15 @@ export class User extends Model<User, IUserCreationAttrs> {
   banned: boolean;
 
   @ApiProperty({ example: 'Fake Info', description: 'Post fake reviews' })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+      len: [1, 150],
+    },
+  })
   banreason: string;
 
   @ApiProperty({
