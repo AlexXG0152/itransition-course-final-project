@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 import {
   IsEmail,
   IsNotEmpty,
@@ -14,6 +15,10 @@ export class CreateUserDto {
   @MaxLength(100, {
     message: 'Email is too long',
   })
+  @ApiProperty({
+    example: 'mail@mail.com',
+    description: 'Email from 5 to 100 symbols',
+  })
   readonly email: string;
 
   @IsString()
@@ -23,6 +28,10 @@ export class CreateUserDto {
   })
   @MaxLength(30, {
     message: 'Password is too long',
+  })
+  @ApiProperty({
+    example: 'password',
+    description: 'Password from 6 to 30 symbols',
   })
   readonly password: string;
 }
