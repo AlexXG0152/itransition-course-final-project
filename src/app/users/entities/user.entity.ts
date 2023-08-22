@@ -55,7 +55,7 @@ export class User extends Model<User, IUserCreateAttrs> {
 
   @ApiProperty({
     example: 'password',
-    description: 'Password from 6 to 30 symbols',
+    description: 'Password from 6 to 60 symbols',
   })
   @Column({
     type: DataType.STRING,
@@ -63,7 +63,7 @@ export class User extends Model<User, IUserCreateAttrs> {
     validate: {
       notNull: true,
       notEmpty: true,
-      len: [6, 30],
+      len: [6, 60],
     },
   })
   password: string;
@@ -79,7 +79,7 @@ export class User extends Model<User, IUserCreateAttrs> {
     validate: {
       notNull: false,
       notEmpty: false,
-      len: [1, 150],
+      len: [1, 250],
     },
   })
   banreason: string;

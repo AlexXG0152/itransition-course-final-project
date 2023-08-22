@@ -9,12 +9,15 @@ import { UsersModule } from './app/users/users.module';
 import { Role } from './app/roles/entities/role.entity';
 import { RolesModule } from './app/roles/roles.module';
 import { UserRoles } from './app/roles/entities/user-roles.entity';
+import { AuthModule } from './app/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/config/.env.${process.env.NODE_ENV}`,
+      isGlobal: true,
       load: [configuration],
+      cache: true,
     }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
@@ -26,6 +29,7 @@ import { UserRoles } from './app/roles/entities/user-roles.entity';
       models: [User, Role, UserRoles],
       autoLoadModels: true,
     }),
+    AuthModule,
     UsersModule,
     RolesModule,
   ],

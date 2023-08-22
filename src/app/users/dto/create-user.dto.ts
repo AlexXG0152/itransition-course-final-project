@@ -20,10 +20,10 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(6, { message: 'Password is too short' })
-  @MaxLength(30, { message: 'Password is too long' })
+  @MaxLength(60, { message: 'Password is too long' })
   @ApiProperty({
     example: 'password',
-    description: 'Password from 6 to 30 symbols',
+    description: 'Password from 6 to 60 symbols',
   })
   readonly password: string;
 }

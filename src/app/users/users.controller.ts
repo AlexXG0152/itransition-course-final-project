@@ -39,6 +39,13 @@ export class UsersController {
     return this.usersService.findOneUser(+id);
   }
 
+  @ApiOperation({ summary: 'Get USER by Email' })
+  @ApiResponse({ status: 200, type: User })
+  @Get(':email')
+  findOneByEmail(@Param('email') email: string) {
+    return this.usersService.findOneUserByEmail(email);
+  }
+
   @ApiOperation({ summary: 'Update USER' })
   @ApiResponse({ status: 200, type: User })
   @Patch(':id')
