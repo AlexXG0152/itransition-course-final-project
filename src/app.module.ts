@@ -4,8 +4,11 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { configuration } from 'config/configuration';
-import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { User } from './app/users/entities/user.entity';
+import { UsersModule } from './app/users/users.module';
+import { Role } from './app/roles/entities/role.entity';
+import { RolesModule } from './app/roles/roles.module';
+import { UserRoles } from './app/roles/entities/user-roles.entity';
 
 @Module({
   imports: [
@@ -20,10 +23,11 @@ import { User } from './users/entities/user.entity';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      models: [User],
+      models: [User, Role, UserRoles],
       autoLoadModels: true,
     }),
     UsersModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
