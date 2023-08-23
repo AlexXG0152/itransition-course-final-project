@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { RolesService } from '../roles/roles.service';
+import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
+import { BanUserDto } from './dto/ban-user.dto';
+import { UnbanUserDto } from './dto/unban-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -49,6 +52,56 @@ export class UsersService {
         where: { email },
         include: { all: true },
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async addRoleToUser(addRoleToUserDto: AddRoleToUserDto) {
+    try {
+      const user = await this.userRepository.findByPk(addRoleToUserDto.userId);
+      const role = this.roleService.findOne(addRoleToUserDto.value);
+
+      if (user && role) {
+        await user.$add('role', (await role).id);
+        return addRoleToUserDto;
+      }
+
+      throw new HttpException("User didn't found", HttpStatus.NOT_FOUND);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async banUser(banUserDto: BanUserDto) {
+    try {
+      const user = await this.userRepository.findByPk(banUserDto.userId);
+      if (!user) {
+        throw new HttpException("User didn't found", HttpStatus.NOT_FOUND);
+      }
+      user.banned = true;
+      user.banreason = banUserDto.banreason;
+
+      await user.save();
+
+      return user;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async unbanUser(unbanUserDto: UnbanUserDto) {
+    try {
+      const user = await this.userRepository.findByPk(unbanUserDto.userId);
+      if (!user) {
+        throw new HttpException("User didn't found", HttpStatus.NOT_FOUND);
+      }
+      user.banned = false;
+      user.unbanreason = `Unbanned: ${unbanUserDto.unbanreason}`;
+
+      await user.save();
+
+      return user;
     } catch (error) {
       console.error(error);
     }

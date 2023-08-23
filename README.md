@@ -1,5 +1,7 @@
 # itransition-course-final-project-backend
 
+<https://itransition-course-final-project-back.onrender.com/api/v1>
+
 Web portal for reviews "what should you read/watch/play, etc."
 
 САЙТ ДЛЯ УПРАВЛЕНИЯ РЕКОМЕНДАЦИЯМИ "ЧЁ ПОСМОТРЕТЬ/ЧЁ ПОЧИТАТЬ/ВО ЧТО ПОИГРАТЬ И Т.Д."

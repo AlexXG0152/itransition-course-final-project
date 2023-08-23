@@ -85,11 +85,19 @@ export class User extends Model<User, IUserCreateAttrs> {
   banreason: string;
 
   @ApiProperty({
-    example: 'true',
-    description: 'User deleted or not',
+    example: 'Apologize',
+    description: 'Apologized for fake reviews',
   })
-  @Column({ type: DataType.BOOLEAN, defaultValue: false })
-  deleted: boolean;
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+      len: [1, 250],
+    },
+  })
+  unbanreason: string;
 
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];

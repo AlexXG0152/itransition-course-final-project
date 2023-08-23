@@ -16,6 +16,9 @@ import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/roles-auth.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
+import { BanUserDto } from './dto/ban-user.dto';
+import { UnbanUserDto } from './dto/unban-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -48,12 +51,32 @@ export class UsersController {
     return this.usersService.findOneUser(+id);
   }
 
-  // @ApiOperation({ summary: 'Get USER by Email' })
-  // @ApiResponse({ status: 200, type: User })
-  // @Get(':email')
-  // findOneByEmail(@Param('email') email: string) {
-  //   return this.usersService.findOneUserByEmail(email);
-  // }
+  @ApiOperation({ summary: 'Get Role to USER' })
+  @ApiResponse({ status: 200 })
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Post('/role')
+  addRole(@Body() addRoleToUserDto: AddRoleToUserDto) {
+    return this.usersService.addRoleToUser(addRoleToUserDto);
+  }
+
+  @ApiOperation({ summary: 'Ban USER' })
+  @ApiResponse({ status: 200 })
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Post('/ban')
+  banUser(@Body() banUserDto: BanUserDto) {
+    return this.usersService.banUser(banUserDto);
+  }
+
+  @ApiOperation({ summary: 'Ban USER' })
+  @ApiResponse({ status: 200 })
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Post('/unban')
+  unbanUser(@Body() unbanUserDto: UnbanUserDto) {
+    return this.usersService.unbanUser(unbanUserDto);
+  }
 
   @ApiOperation({ summary: 'Update USER' })
   @ApiResponse({ status: 200, type: User })
