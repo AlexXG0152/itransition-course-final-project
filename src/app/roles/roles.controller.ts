@@ -16,6 +16,8 @@ import { ApiOperation } from '@nestjs/swagger/dist/decorators/api-operation.deco
 import { ApiResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
 import { Role } from './entities/role.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/roles-auth.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -24,7 +26,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Create ROLE' })
   @ApiResponse({ status: 201, type: Role })
-  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Post()
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.create(createRoleDto);
@@ -32,7 +35,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Get all ROLES' })
   @ApiResponse({ status: 201, type: Role })
-  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Get()
   findAll() {
     return this.rolesService.findAll();
@@ -40,7 +44,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Get ROLE by value' })
   @ApiResponse({ status: 201, type: Role })
-  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Get(':value')
   findOne(@Param('value') value: string) {
     return this.rolesService.findOne(value);
@@ -48,7 +53,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Update ROLE' })
   @ApiResponse({ status: 201, type: Role })
-  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Patch(':value')
   update(@Param('value') value: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.rolesService.update(value, updateRoleDto);
@@ -56,7 +62,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Delete ROLE' })
   @ApiResponse({ status: 201, type: Role })
-  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Delete(':value')
   remove(@Param('value') value: string) {
     return this.rolesService.remove(value);

@@ -42,22 +42,29 @@ export class AuthService {
   }
 
   private async generateToken(user: User) {
-    const payload = { email: user.email, id: user.id, roles: user.roles };
-    return {
-      token: this.jwtService.sign(payload),
-    };
+    try {
+      const payload = { email: user.email, id: user.id, roles: user.roles };
+      return {
+        token: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   private async validateUser(userDto: CreateUserDto) {
-    const user = await this.userService.findOneUserByEmail(userDto.email);
-    const passwordEquals = await bcrypt.compare(
-      userDto.password,
-      user.password,
-    );
+    try {
+      const user = await this.userService.findOneUserByEmail(userDto.email);
+      const passwordEquals = await bcrypt.compare(
+        userDto.password,
+        user.password,
+      );
 
-    if (user && passwordEquals) {
-      return user;
+      if (user && passwordEquals) {
+        return user;
+      }
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Bad email or password' });
     }
-    throw new UnauthorizedException({ message: 'Bad email or password' });
   }
 }

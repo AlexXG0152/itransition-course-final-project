@@ -1,7 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 import {
-  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
@@ -40,19 +39,4 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     description: 'Password from 6 to 60 symbols',
   })
   readonly password: string;
-
-  @IsOptional()
-  @IsBoolean()
-  @ApiProperty({ example: 'false', description: 'User blocked or not' })
-  readonly banned: boolean;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(1, { message: 'Ban reason is too short' })
-  @MaxLength(250, { message: 'Ban reason is too long' })
-  @ApiProperty({
-    example: 'Fake Info',
-    description: 'Description why banned 250 symbols',
-  })
-  readonly banreason: string;
 }
