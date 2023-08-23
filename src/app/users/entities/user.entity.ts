@@ -4,11 +4,13 @@ import {
   Table,
   Model,
   BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { IUserCreateAttrs } from '../interfaces/userCreate.interface';
 import { Role } from 'src/app/roles/entities/role.entity';
 import { UserRoles } from 'src/app/roles/entities/user-roles.entity';
+import { Review } from 'src/app/reviews/entities/review.entity';
 
 @Table({ tableName: 'users', paranoid: true })
 export class User extends Model<User, IUserCreateAttrs> {
@@ -26,13 +28,14 @@ export class User extends Model<User, IUserCreateAttrs> {
     description: 'Email from 5 to 100 symbols',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     unique: true,
     allowNull: false,
     validate: {
       notNull: true,
       notEmpty: true,
       len: [5, 100],
+      isEmail: true,
     },
   })
   email: string;
@@ -42,7 +45,7 @@ export class User extends Model<User, IUserCreateAttrs> {
     description: 'User name from 0 to 50 symbols',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(50),
     unique: false,
     allowNull: true,
     validate: {
@@ -58,7 +61,7 @@ export class User extends Model<User, IUserCreateAttrs> {
     description: 'Password from 6 to 60 symbols',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(60),
     allowNull: false,
     validate: {
       notNull: true,
@@ -101,4 +104,7 @@ export class User extends Model<User, IUserCreateAttrs> {
 
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
+
+  @HasMany(() => Review)
+  reviews: Review[];
 }

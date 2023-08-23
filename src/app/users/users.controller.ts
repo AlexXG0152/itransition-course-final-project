@@ -90,7 +90,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Delete USER' })
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 200 })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Delete(':id')

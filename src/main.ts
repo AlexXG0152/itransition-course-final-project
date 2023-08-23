@@ -17,8 +17,6 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/api/v1/docs', app, swaggerDocument);
 
-  app.useGlobalPipes(new ValidationPipe());
-
   const PORT = process.env.PORT || 3001;
 
   await app.listen(PORT, () => {
