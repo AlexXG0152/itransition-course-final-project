@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -109,11 +110,13 @@ export class UsersService {
 
   async updateUser(id: number, updateUserDto: UpdateUserDto) {
     try {
-      const user = await this.userRepository.update(updateUserDto, {
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
+
+      return await this.userRepository.update(updateUserDto, {
         where: { id },
       });
-
-      return user;
     } catch (error) {
       console.error(error);
     }

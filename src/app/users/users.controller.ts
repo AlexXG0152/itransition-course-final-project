@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  // UsePipes,
+  // ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -81,6 +83,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update USER' })
   @ApiResponse({ status: 200, type: User })
   @UseGuards(JwtAuthGuard)
+  // @UsePipes(ValidationPipe)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(+id, updateUserDto);
