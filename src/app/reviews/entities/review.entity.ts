@@ -9,7 +9,8 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { IReviewCreateAttrs } from '../interfaces/reviewCreate.interface';
 import { User } from 'src/app/users/entities/user.entity';
-import { ProductReview } from './product.entity';
+import { Product } from 'src/app/product/entities/product.entity';
+// import { ProductReview } from './product-review.entity';
 
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
@@ -68,8 +69,8 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   tags: string;
 
   @ApiProperty({
-    example: 'Review text',
-    description: 'Review text from 1 to 200 symbols',
+    example: 'Review content',
+    description: 'Review content from 1 to 200 symbols',
   })
   @Column({
     type: DataType.TEXT('medium'),
@@ -80,7 +81,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
       len: [1, 16777215],
     },
   })
-  text: string;
+  content: string;
 
   @ApiProperty({
     example: 'Review images links (optional)',
@@ -112,7 +113,23 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
       max: 10,
     },
   })
-  rating: number;
+  reviewRating: number;
+
+  @ApiProperty({
+    example: 'Review likes',
+    description: 'Review likes count',
+  })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+      isInt: true,
+      min: 0,
+    },
+  })
+  like: number;
 
   @ApiProperty({
     example: 'Review author ID',
@@ -133,20 +150,35 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     example: 'Review product ID',
     description: 'Review product ID',
   })
-  @ForeignKey(() => ProductReview)
+  @ForeignKey(() => Product)
   @Column({
     type: DataType.INTEGER,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+    },
+  })
+  productId: number;
+
+  @ApiProperty({
+    example: 'Review product name',
+    description: 'Review product name',
+  })
+  @ForeignKey(() => Product)
+  @Column({
+    type: DataType.STRING,
     allowNull: false,
     validate: {
       notNull: true,
       notEmpty: true,
     },
   })
-  productId: number;
+  productTitle: string;
 
   @BelongsTo(() => User)
   user: User;
 
-  @BelongsTo(() => ProductReview)
-  product: ProductReview;
+  @BelongsTo(() => Product)
+  product: Product;
 }

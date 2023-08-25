@@ -32,7 +32,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
   @ApiOperation({ summary: 'Get all USERS' })
@@ -41,7 +41,7 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Get()
   findAll() {
-    return this.usersService.findAllUsers();
+    return this.usersService.findAll();
   }
 
   @ApiOperation({ summary: 'Get USER by ID' })
@@ -50,7 +50,7 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOneUser(+id);
+    return this.usersService.findOne(+id);
   }
 
   @ApiOperation({ summary: 'Get Role to USER' })
@@ -86,7 +86,7 @@ export class UsersController {
   // @UsePipes(ValidationPipe)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(+id, updateUserDto);
+    return this.usersService.update(+id, updateUserDto);
   }
 
   @ApiOperation({ summary: 'Delete USER' })
@@ -95,6 +95,6 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.removeUser(+id);
+    return this.usersService.remove(+id);
   }
 }

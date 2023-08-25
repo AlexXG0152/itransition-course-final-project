@@ -3,9 +3,10 @@ export interface IReviewCreateAttrs {
   title: string;
   category: string;
   tags: string;
-  text: string;
+  content: string;
   imageslinks?: string;
-  rating: number;
+  reviewRating: number;
   userId: number;
-  productId: number;
+  productId?: number;
+  productTitle: string;
 }

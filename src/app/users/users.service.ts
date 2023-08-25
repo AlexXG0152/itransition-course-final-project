@@ -16,7 +16,7 @@ export class UsersService {
     private roleService: RolesService,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     try {
       const user = await this.userRepository.create(createUserDto);
       const role = await this.roleService.findOne('USER');
@@ -28,7 +28,7 @@ export class UsersService {
     }
   }
 
-  async findAllUsers() {
+  async findAll() {
     try {
       const users = await this.userRepository.findAll({
         include: { all: true },
@@ -39,7 +39,7 @@ export class UsersService {
     }
   }
 
-  async findOneUser(id: number) {
+  async findOne(id: number) {
     try {
       return await this.userRepository.findOne({ where: { id } });
     } catch (error) {
@@ -47,7 +47,7 @@ export class UsersService {
     }
   }
 
-  async findOneUserByEmail(email: string) {
+  async findOneByEmail(email: string) {
     try {
       return await this.userRepository.findOne({
         where: { email },
@@ -108,7 +108,7 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     try {
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
@@ -122,7 +122,7 @@ export class UsersService {
     }
   }
 
-  async removeUser(id: number) {
+  async remove(id: number) {
     try {
       return await this.userRepository.destroy({ where: { id } });
     } catch (error) {

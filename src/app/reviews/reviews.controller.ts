@@ -20,12 +20,13 @@ import { Review } from './entities/review.entity';
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
+
   @ApiOperation({ summary: 'Create Review' })
   @ApiResponse({ status: 201, type: Review })
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Req() req: Request, @Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
+    return this.reviewsService.create(req, createReviewDto);
   }
 
   @ApiOperation({ summary: 'Get All Review' })
@@ -62,5 +63,13 @@ export class ReviewsController {
   @Delete(':id')
   remove(@Req() req: Request, @Param('id') id: string) {
     return this.reviewsService.remove(+id);
+  }
+
+  @ApiOperation({ summary: 'Like Review' })
+  @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/like')
+  likeReview(@Param('id') reviewID: number, @Req() req: Request) {
+    return this.reviewsService.likeReview(reviewID, req);
   }
 }

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UnbanUserDto {
-  @IsString()
+  @IsNumber()
   @ApiProperty({ example: '1', description: 'User ID' })
-  readonly userId: string;
+  readonly userId: number;
 
   @IsOptional()
   @IsString()
