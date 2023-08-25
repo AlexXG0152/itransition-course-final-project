@@ -10,6 +10,13 @@ import { Role } from './app/roles/entities/role.entity';
 import { RolesModule } from './app/roles/roles.module';
 import { UserRoles } from './app/roles/entities/user-roles.entity';
 import { AuthModule } from './app/auth/auth.module';
+// import { ProductReview } from './app/reviews/entities/product-review.entity';
+import { Review } from './app/reviews/entities/review.entity';
+import { ReviewsModule } from './app/reviews/reviews.module';
+import { Product } from './app/product/entities/product.entity';
+import { ProductModule } from './app/product/product.module';
+import { Rating } from './app/product/entities/rating.entity';
+import { Like } from './app/reviews/entities/like.entity';
 
 @Module({
   imports: [
@@ -26,12 +33,14 @@ import { AuthModule } from './app/auth/auth.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      models: [User, Role, UserRoles],
+      models: [User, Role, UserRoles, Review, Product, Rating, Like],
       autoLoadModels: true,
     }),
     AuthModule,
     UsersModule,
     RolesModule,
+    ProductModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,7 +34,7 @@ export class RolesController {
   }
 
   @ApiOperation({ summary: 'Get all ROLES' })
-  @ApiResponse({ status: 201, type: Role })
+  @ApiResponse({ status: 200, type: Role })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Get()
@@ -43,7 +43,7 @@ export class RolesController {
   }
 
   @ApiOperation({ summary: 'Get ROLE by value' })
-  @ApiResponse({ status: 201, type: Role })
+  @ApiResponse({ status: 200, type: Role })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Get(':value')
@@ -52,7 +52,7 @@ export class RolesController {
   }
 
   @ApiOperation({ summary: 'Update ROLE' })
-  @ApiResponse({ status: 201, type: Role })
+  @ApiResponse({ status: 200, type: Role })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Patch(':value')
@@ -61,7 +61,7 @@ export class RolesController {
   }
 
   @ApiOperation({ summary: 'Delete ROLE' })
-  @ApiResponse({ status: 201, type: Role })
+  @ApiResponse({ status: 200 })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Delete(':value')

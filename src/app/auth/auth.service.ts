@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async registration(userDto: CreateUserDto) {
-    const candidate = await this.userService.findOneUserByEmail(userDto.email);
+    const candidate = await this.userService.findOneByEmail(userDto.email);
     if (candidate) {
       throw new HttpException(
         'User with this email already registered',
@@ -33,7 +33,7 @@ export class AuthService {
 
     const hashPassword = await bcrypt.hash(userDto.password, 10);
 
-    const user = await this.userService.createUser({
+    const user = await this.userService.create({
       ...userDto,
       password: hashPassword,
     });
@@ -54,7 +54,7 @@ export class AuthService {
 
   private async validateUser(userDto: CreateUserDto) {
     try {
-      const user = await this.userService.findOneUserByEmail(userDto.email);
+      const user = await this.userService.findOneByEmail(userDto.email);
       const passwordEquals = await bcrypt.compare(
         userDto.password,
         user.password,
