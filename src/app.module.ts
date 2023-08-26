@@ -17,6 +17,7 @@ import { ProductModule } from './app/product/product.module';
 import { Rating } from './app/product/entities/rating.entity';
 import { Like } from './app/reviews/entities/like.entity';
 import { FirebaseModule } from './app/firebase/firebase.module';
+import { CommentsModule } from './app/comments/comments.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { FirebaseModule } from './app/firebase/firebase.module';
     RolesModule,
     ProductModule,
     ReviewsModule,
+    CommentsModule,
     FirebaseModule,
   ],
   controllers: [AppController],
