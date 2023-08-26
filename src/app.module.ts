@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { configuration } from 'config/configuration';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 import { User } from './app/users/entities/user.entity';
 import { UsersModule } from './app/users/users.module';
 import { Role } from './app/roles/entities/role.entity';
 import { RolesModule } from './app/roles/roles.module';
 import { UserRoles } from './app/roles/entities/user-roles.entity';
 import { AuthModule } from './app/auth/auth.module';
-// import { ProductReview } from './app/reviews/entities/product-review.entity';
 import { Review } from './app/reviews/entities/review.entity';
 import { ReviewsModule } from './app/reviews/reviews.module';
 import { Product } from './app/product/entities/product.entity';
 import { ProductModule } from './app/product/product.module';
 import { Rating } from './app/product/entities/rating.entity';
 import { Like } from './app/reviews/entities/like.entity';
+import { FirebaseModule } from './app/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { Like } from './app/reviews/entities/like.entity';
     RolesModule,
     ProductModule,
     ReviewsModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
