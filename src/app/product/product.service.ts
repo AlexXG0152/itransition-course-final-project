@@ -19,14 +19,17 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    const candidate = await this.productRepository.findByPk(
-      createProductDto.id,
-    );
-    if (candidate) {
-      return;
+    // const candidate = await this.productRepository.findByPk(
+    //   createProductDto.id,
+    // );
+    // if (candidate) {
+    //   return;
+    // }
+    try {
+      return await this.productRepository.create(createProductDto);
+    } catch (error) {
+      console.error(error);
     }
-    const product = await this.productRepository.create(createProductDto);
-    return product;
   }
 
   async findAll() {

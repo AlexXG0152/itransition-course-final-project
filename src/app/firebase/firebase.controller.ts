@@ -29,7 +29,7 @@ export class FirebaseController {
       limits: { fileSize: 5242880 },
     }),
   )
-  uploadFile(
+  async uploadFile(
     @Body() body: any,
     @UploadedFiles(
       new ParseFilePipeBuilder()
@@ -52,7 +52,7 @@ export class FirebaseController {
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Delete(':name')
-  remove(@Param('name') name: string) {
+  async remove(@Param('name') name: string) {
     return this.firebaseService.remove(name);
   }
 }
