@@ -8,6 +8,10 @@ import { Rating } from './entities/rating.entity';
 import { RateProductDto } from './dto/rate-product.dto';
 import sequelize from 'sequelize';
 import { IProductDBAnswer } from './interfaces/IProductDBAnswer.interface';
+import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { Category } from './entities/category.entity';
+import { Subcategory } from './entities/subcategory.entity';
 
 @Injectable()
 export class ProductsService {
@@ -16,6 +20,10 @@ export class ProductsService {
     private productRepository: typeof Product,
     @InjectModel(Rating)
     private ratingRepository: typeof Rating,
+    @InjectModel(Category)
+    private categoryRepository: typeof Category,
+    @InjectModel(Subcategory)
+    private subcategoryRepository: typeof Subcategory,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -34,7 +42,9 @@ export class ProductsService {
 
   async findAll() {
     try {
-      return await this.productRepository.findAll({ include: [Review] });
+      return await this.productRepository.findAll({
+        include: [Review, Category, Subcategory],
+      });
     } catch (error) {
       console.error(error);
     }
@@ -42,7 +52,9 @@ export class ProductsService {
 
   async findOne(id: number) {
     try {
-      return await this.productRepository.findByPk(id, { include: [Review] });
+      return await this.productRepository.findByPk(id, {
+        include: [Review, Category, Subcategory],
+      });
     } catch (error) {
       console.error(error);
     }
@@ -143,6 +155,48 @@ export class ProductsService {
       }
     } catch (error) {
       await transaction.rollback();
+      console.error(error);
+    }
+  }
+
+  async createCategory(createCategoryDto: CreateCategoryDto) {
+    try {
+      return await this.categoryRepository.create(createCategoryDto);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async createSubcategory(createSubcategoryDto: CreateSubcategoryDto) {
+    try {
+      return await this.subcategoryRepository.create(createSubcategoryDto);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async findAllCategory() {
+    try {
+      return await this.categoryRepository.findAll({
+        include: [Subcategory],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async findAllSubcategory() {
+    try {
+      return await this.subcategoryRepository.findAll({
+        include: [Category],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+        },
+      });
+    } catch (error) {
       console.error(error);
     }
   }

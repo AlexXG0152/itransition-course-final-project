@@ -8,6 +8,8 @@ import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
 import sequelize from 'sequelize';
 import { Comment } from '../comments/entities/comment.entity';
+import { Category } from '../product/entities/category.entity';
+import { Subcategory } from '../product/entities/subcategory.entity';
 
 @Injectable()
 export class ReviewsService {
@@ -26,7 +28,13 @@ export class ReviewsService {
       const userId = req['user'].id;
       if (createReviewDto.productId === 0) {
         const productTitle = createReviewDto.productTitle;
-        const product = await this.productRepository.create({ productTitle });
+        const categoryId = createReviewDto.categoryId;
+        const subcategoryId = createReviewDto.subcategoryId;
+        const product = await this.productRepository.create({
+          productTitle,
+          categoryId,
+          subcategoryId,
+        });
         createReviewDto.productId = product.id;
       }
       const review = await this.reviewRepository.create({
@@ -43,7 +51,7 @@ export class ReviewsService {
   async findAll(): Promise<Review[]> {
     try {
       return await this.reviewRepository.findAll({
-        include: [Product, Comment],
+        include: [Product, Comment, Category, Subcategory],
       });
     } catch (error) {
       console.error(error);
@@ -53,7 +61,7 @@ export class ReviewsService {
   async findOne(id: number) {
     try {
       return await this.reviewRepository.findByPk(id, {
-        include: [Product, Comment],
+        include: [Product, Comment, Category, Subcategory],
       });
     } catch (error) {
       console.error(error);

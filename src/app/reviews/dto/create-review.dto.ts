@@ -97,4 +97,19 @@ export class CreateReviewDto {
     description: 'Review product ID',
   })
   productId: number;
+
+  @IsNumber()
+  @ApiProperty({
+    example: 'Review product category ID',
+    description: 'Review product category ID',
+  })
+  categoryId: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({
+    example: 'Review product subcategory ID',
+    description: 'Review product subcategory ID',
+  })
+  subcategoryId: number;
 }
