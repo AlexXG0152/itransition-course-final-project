@@ -15,6 +15,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RateProductDto } from './dto/rate-product.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -57,5 +59,35 @@ export class ProductsController {
   @Post(':id/rate')
   rate(@Req() req: Request, @Body() rateProductDto: RateProductDto) {
     return this.productService.rateProduct(req, rateProductDto);
+  }
+
+  @ApiOperation({ summary: 'Create Category' })
+  @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @Post('/category')
+  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.productService.createCategory(createCategoryDto);
+  }
+
+  @ApiOperation({ summary: 'Create Subcategory' })
+  @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @Post('/subcategory')
+  createSubcategory(@Body() createSubcategoryDto: CreateSubcategoryDto) {
+    return this.productService.createSubcategory(createSubcategoryDto);
+  }
+
+  @ApiOperation({ summary: 'Find all Categories' })
+  @ApiResponse({ status: 200 })
+  @Get('/category/all')
+  findAllCategory() {
+    return this.productService.findAllCategory();
+  }
+
+  @ApiOperation({ summary: 'Find all Subcategories' })
+  @ApiResponse({ status: 200 })
+  @Get('/subcategory/all')
+  findAllSubcategory() {
+    return this.productService.findAllSubcategory();
   }
 }

@@ -12,6 +12,8 @@ import { IReviewCreateAttrs } from '../interfaces/reviewCreate.interface';
 import { User } from 'src/app/users/entities/user.entity';
 import { Product } from 'src/app/product/entities/product.entity';
 import { Comment } from 'src/app/comments/entities/comment.entity';
+import { Category } from 'src/app/product/entities/category.entity';
+import { Subcategory } from 'src/app/product/entities/subcategory.entity';
 
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
@@ -173,8 +175,44 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   @BelongsTo(() => User)
   user: User;
 
+  @ApiProperty({
+    example: 'Review Category ID',
+    description: 'Review Category ID',
+  })
+  @ForeignKey(() => Category)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+    },
+  })
+  categoryId: number;
+
+  @ApiProperty({
+    example: 'Review Subcategory ID',
+    description: 'Review Subcategory ID',
+  })
+  @ForeignKey(() => Subcategory)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    validate: {
+      notNull: false,
+      notEmpty: false,
+    },
+  })
+  subcategoryId: number;
+
   @BelongsTo(() => Product)
   product: Product;
+
+  @BelongsTo(() => Category)
+  categoryID: Category;
+
+  @BelongsTo(() => Subcategory)
+  subcategoryID: Subcategory;
 
   @HasMany(() => Comment)
   comments: Comment[];

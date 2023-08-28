@@ -11,6 +11,15 @@ export async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({
+    allowedHeaders: ['content-type'],
+    origin: [
+      'http://localhost:4200',
+      'https://itransition-course-final-project-front.onrender.com',
+    ],
+    credentials: true,
+  });
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Recommendation Portal')
     .setDescription('The recommendation portal API description')

@@ -19,6 +19,8 @@ import { Like } from './app/reviews/entities/like.entity';
 import { Comment } from './app/comments/entities/comment.entity';
 import { FirebaseModule } from './app/firebase/firebase.module';
 import { CommentsModule } from './app/comments/comments.module';
+import { Category } from './app/product/entities/category.entity';
+import { Subcategory } from './app/product/entities/subcategory.entity';
 
 @Module({
   imports: [
@@ -35,8 +37,27 @@ import { CommentsModule } from './app/comments/comments.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      models: [User, Role, UserRoles, Review, Product, Rating, Like, Comment],
+      models: [
+        User,
+        Role,
+        UserRoles,
+        Review,
+        Product,
+        Rating,
+        Like,
+        Comment,
+        Category,
+        Subcategory,
+      ],
       autoLoadModels: true,
+      // define: {
+      //   scopes: {
+      //     excludeCreatedAtUpdateAt: {
+      //       attributes: { exclude: ['createdAt', 'updatedAt'] },
+      //     },
+      //   },
+      //   timestamps: false,
+      // },
     }),
     AuthModule,
     UsersModule,

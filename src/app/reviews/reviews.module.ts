@@ -8,12 +8,21 @@ import { AuthModule } from '../auth/auth.module';
 import { User } from '../users/entities/user.entity';
 import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
+import { Category } from '../product/entities/category.entity';
+import { Subcategory } from '../product/entities/subcategory.entity';
 
 @Module({
   controllers: [ReviewsController],
   providers: [ReviewsService],
   imports: [
-    SequelizeModule.forFeature([User, Review, Product, Like]),
+    SequelizeModule.forFeature([
+      User,
+      Review,
+      Product,
+      Like,
+      Category,
+      Subcategory,
+    ]),
     RolesModule,
     forwardRef(() => AuthModule),
   ],
