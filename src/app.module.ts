@@ -16,7 +16,9 @@ import { Product } from './app/product/entities/product.entity';
 import { ProductModule } from './app/product/product.module';
 import { Rating } from './app/product/entities/rating.entity';
 import { Like } from './app/reviews/entities/like.entity';
+import { Comment } from './app/comments/entities/comment.entity';
 import { FirebaseModule } from './app/firebase/firebase.module';
+import { CommentsModule } from './app/comments/comments.module';
 
 @Module({
   imports: [
@@ -33,7 +35,7 @@ import { FirebaseModule } from './app/firebase/firebase.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      models: [User, Role, UserRoles, Review, Product, Rating, Like],
+      models: [User, Role, UserRoles, Review, Product, Rating, Like, Comment],
       autoLoadModels: true,
     }),
     AuthModule,
@@ -41,6 +43,7 @@ import { FirebaseModule } from './app/firebase/firebase.module';
     RolesModule,
     ProductModule,
     ReviewsModule,
+    CommentsModule,
     FirebaseModule,
   ],
   controllers: [AppController],

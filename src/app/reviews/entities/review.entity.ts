@@ -5,12 +5,13 @@ import {
   Model,
   BelongsTo,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { IReviewCreateAttrs } from '../interfaces/reviewCreate.interface';
 import { User } from 'src/app/users/entities/user.entity';
 import { Product } from 'src/app/product/entities/product.entity';
-// import { ProductReview } from './product-review.entity';
+import { Comment } from 'src/app/comments/entities/comment.entity';
 
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
@@ -108,17 +109,13 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     validate: {
       notNull: true,
       notEmpty: true,
-      isInt: true,
       min: 0,
       max: 10,
     },
   })
   reviewRating: number;
 
-  @ApiProperty({
-    example: 'Review likes',
-    description: 'Review likes count',
-  })
+  @ApiProperty({ example: 'Review likes', description: 'Review likes count' })
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
@@ -131,10 +128,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   })
   like: number;
 
-  @ApiProperty({
-    example: 'Review author ID',
-    description: 'Review author ID',
-  })
+  @ApiProperty({ example: 'Review author ID', description: 'Review author ID' })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
@@ -181,4 +175,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
 
   @BelongsTo(() => Product)
   product: Product;
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

@@ -37,10 +37,7 @@ export class Product extends Model<Product> {
   })
   productTitle: string;
 
-  @ApiProperty({
-    example: 'Rating',
-    description: 'Product rating from 1 to 5',
-  })
+  @ApiProperty({ example: 'Rating', description: 'Product rating from 1 to 5' })
   @Column({
     type: DataType.STRING,
     validate: {

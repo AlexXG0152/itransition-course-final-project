@@ -7,6 +7,7 @@ import { User } from '../users/entities/user.entity';
 import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
 import sequelize from 'sequelize';
+import { Comment } from '../comments/entities/comment.entity';
 
 @Injectable()
 export class ReviewsService {
@@ -41,7 +42,9 @@ export class ReviewsService {
 
   async findAll(): Promise<Review[]> {
     try {
-      return await this.reviewRepository.findAll({ include: [Product] });
+      return await this.reviewRepository.findAll({
+        include: [Product, Comment],
+      });
     } catch (error) {
       console.error(error);
     }
@@ -49,7 +52,9 @@ export class ReviewsService {
 
   async findOne(id: number) {
     try {
-      return await this.reviewRepository.findByPk(id, { include: [Product] });
+      return await this.reviewRepository.findByPk(id, {
+        include: [Product, Comment],
+      });
     } catch (error) {
       console.error(error);
     }

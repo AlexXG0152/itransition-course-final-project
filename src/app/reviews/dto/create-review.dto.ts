@@ -69,7 +69,7 @@ export class CreateReviewDto {
     example: 'Review author rating mark',
     description: 'Review author rating mark from 0 to 10',
   })
-  readonly rating: number;
+  readonly reviewRating: number;
 
   // @IsNumber()
   // @IsNotEmpty()

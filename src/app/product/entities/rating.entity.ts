@@ -22,10 +22,7 @@ export class Rating extends Model<Rating> {
   })
   id: number;
 
-  @ApiProperty({
-    example: 'userId',
-    description: 'userId who give rating',
-  })
+  @ApiProperty({ example: 'userId', description: 'userId who give rating' })
   @ForeignKey(() => User)
   @Index('userId_index')
   @Column({
@@ -39,10 +36,7 @@ export class Rating extends Model<Rating> {
   })
   userId: number;
 
-  @ApiProperty({
-    example: 'productId',
-    description: 'productId for rating',
-  })
+  @ApiProperty({ example: 'productId', description: 'productId for rating' })
   @ForeignKey(() => Product)
   @Column({
     type: DataType.INTEGER,
@@ -55,10 +49,7 @@ export class Rating extends Model<Rating> {
   })
   productId: number;
 
-  @ApiProperty({
-    example: 'productId rate',
-    description: 'productId rate',
-  })
+  @ApiProperty({ example: 'productId rate', description: 'productId rate' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
