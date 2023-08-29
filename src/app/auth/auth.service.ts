@@ -9,6 +9,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,13 +18,15 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(userDto: CreateUserDto) {
-    const user = await this.validateUser(userDto);
+  async login(loginUserDto: LoginUserDto) {
+    const user = await this.validateUser(loginUserDto);
     return this.generateToken(user);
   }
 
-  async registration(userDto: CreateUserDto) {
-    const candidate = await this.userService.findOneByEmail(userDto.email);
+  async registration(createUserDto: CreateUserDto) {
+    const candidate = await this.userService.findOneByEmail(
+      createUserDto.email,
+    );
     if (candidate) {
       throw new HttpException(
         'User with this email already registered',
@@ -31,10 +34,10 @@ export class AuthService {
       );
     }
 
-    const hashPassword = await bcrypt.hash(userDto.password, 10);
+    const hashPassword = await bcrypt.hash(createUserDto.password, 10);
 
     const user = await this.userService.create({
-      ...userDto,
+      ...createUserDto,
       password: hashPassword,
     });
 
@@ -43,8 +46,14 @@ export class AuthService {
 
   private async generateToken(user: User) {
     try {
-      const payload = { email: user.email, id: user.id, roles: user.roles };
+      const payload = {
+        email: user.email,
+        id: user.id,
+        name: user.name,
+        roles: user.roles,
+      };
       return {
+        name: user.name,
         token: this.jwtService.sign(payload),
       };
     } catch (error) {
@@ -52,11 +61,11 @@ export class AuthService {
     }
   }
 
-  private async validateUser(userDto: CreateUserDto) {
+  private async validateUser(loginUserDto: LoginUserDto) {
     try {
-      const user = await this.userService.findOneByEmail(userDto.email);
+      const user = await this.userService.findOneByEmail(loginUserDto.email);
       const passwordEquals = await bcrypt.compare(
-        userDto.password,
+        loginUserDto.password,
         user.password,
       );
 

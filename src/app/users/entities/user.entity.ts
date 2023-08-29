@@ -48,11 +48,11 @@ export class User extends Model<User, IUserCreateAttrs> {
   @Column({
     type: DataType.STRING(50),
     unique: false,
-    allowNull: true,
+    allowNull: false,
     validate: {
-      notNull: false,
-      notEmpty: false,
-      len: [0, 50],
+      notNull: true,
+      notEmpty: true,
+      len: [1, 50],
     },
   })
   name: string;

@@ -23,10 +23,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   @IsString()
+  @MinLength(1, { message: 'Name is too short' })
   @MaxLength(50, { message: 'Name is too long' })
   @ApiProperty({
     example: 'User',
-    description: 'User name from 0 to 50 symbols',
+    description: 'User name from 1 to 50 symbols',
   })
   readonly name: string;
 

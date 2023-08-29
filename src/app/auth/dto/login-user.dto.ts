@@ -6,7 +6,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-export class CreateUserDto {
+
+export class LoginUserDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()
@@ -17,16 +18,6 @@ export class CreateUserDto {
     description: 'Email from 5 to 100 symbols',
   })
   readonly email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1, { message: 'Name is too short' })
-  @MaxLength(50, { message: 'Name is too long' })
-  @ApiProperty({
-    example: 'Name',
-    description: 'Name from 1 to 50 symbols',
-  })
-  readonly name: string;
 
   @IsString()
   @IsNotEmpty()

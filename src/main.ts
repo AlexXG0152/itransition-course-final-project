@@ -12,7 +12,7 @@ export async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    allowedHeaders: ['content-type'],
+    allowedHeaders: ['content-type', 'authorization'],
     origin: [
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
