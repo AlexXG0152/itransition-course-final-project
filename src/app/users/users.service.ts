@@ -58,6 +58,20 @@ export class UsersService {
     }
   }
 
+  async findMe(req: any) {
+    try {
+      return await User.findOne({
+        where: { id: req.user.id },
+        include: { all: true },
+        attributes: {
+          exclude: ['password', 'banned', 'banreason', 'unbanreason'],
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async addRoleToUser(addRoleToUserDto: AddRoleToUserDto) {
     try {
       const user = await this.userRepository.findByPk(addRoleToUserDto.userId);

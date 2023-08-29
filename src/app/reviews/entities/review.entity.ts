@@ -172,9 +172,6 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   })
   productTitle: string;
 
-  @BelongsTo(() => User)
-  user: User;
-
   @ApiProperty({
     example: 'Review Category ID',
     description: 'Review Category ID',
@@ -204,6 +201,9 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     },
   })
   subcategoryId: number;
+
+  @BelongsTo(() => User)
+  user: User;
 
   @BelongsTo(() => Product)
   product: Product;

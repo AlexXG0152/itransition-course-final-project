@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
   // UsePipes,
   // ValidationPipe,
 } from '@nestjs/common';
@@ -51,6 +52,15 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
+  }
+
+  @ApiOperation({ summary: 'Get USER by ID' })
+  @ApiResponse({ status: 200, type: User })
+  @Roles('USER')
+  @UseGuards(JwtAuthGuard)
+  @Get('/0/me')
+  findMe(@Req() req: Request) {
+    return this.usersService.findMe(req);
   }
 
   @ApiOperation({ summary: 'Get Role to USER' })

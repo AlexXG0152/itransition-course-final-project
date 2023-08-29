@@ -12,6 +12,8 @@ import { Role } from 'src/app/roles/entities/role.entity';
 import { UserRoles } from 'src/app/roles/entities/user-roles.entity';
 import { Review } from 'src/app/reviews/entities/review.entity';
 import { Rating } from 'src/app/product/entities/rating.entity';
+import { Comment } from 'src/app/comments/entities/comment.entity';
+import { Like } from 'src/app/reviews/entities/like.entity';
 
 @Table({ tableName: 'users', paranoid: true })
 export class User extends Model<User, IUserCreateAttrs> {
@@ -111,4 +113,10 @@ export class User extends Model<User, IUserCreateAttrs> {
 
   @HasMany(() => Rating)
   ratings: Rating[];
+
+  @HasMany(() => Comment)
+  comments: Comment[];
+
+  @HasMany(() => Like)
+  likes: Like[];
 }
