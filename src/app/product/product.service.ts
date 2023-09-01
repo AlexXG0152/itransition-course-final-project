@@ -178,10 +178,18 @@ export class ProductsService {
   async findAllCategory() {
     try {
       return await this.categoryRepository.findAll({
-        include: [Subcategory],
+        include: [
+          {
+            model: Subcategory,
+            as: 'subcategories',
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+          },
+        ],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
+        // raw: true,
+        nest: true,
       });
     } catch (error) {
       console.error(error);
@@ -191,10 +199,18 @@ export class ProductsService {
   async findAllSubcategory() {
     try {
       return await this.subcategoryRepository.findAll({
-        include: [Category],
+        include: [
+          {
+            model: Category,
+            as: 'category',
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+          },
+        ],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
+        // raw: true,
+        nest: true,
       });
     } catch (error) {
       console.error(error);

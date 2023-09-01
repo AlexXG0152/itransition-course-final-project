@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import sequelize from 'sequelize';
+import { Op } from 'sequelize';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './entities/review.entity';
 import { User } from '../users/entities/user.entity';
 import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
-import sequelize from 'sequelize';
 import { Comment } from '../comments/entities/comment.entity';
 import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
@@ -17,6 +18,7 @@ export class ReviewsService {
     @InjectModel(Product) private productRepository: typeof Product,
     @InjectModel(Review) private reviewRepository: typeof Review,
     @InjectModel(Like) private likeRepository: typeof Like,
+    @InjectModel(Comment) private commentRepository: typeof Comment,
     @InjectModel(User) private userRepository: typeof User,
   ) {}
 
@@ -147,6 +149,45 @@ export class ReviewsService {
       }
     } catch (error) {
       await transaction.rollback();
+      console.error(error);
+    }
+  }
+
+  async findAllByFullTextSearch(query: string): Promise<{
+    reviews: Review[];
+    comments: Comment[];
+  }> {
+    try {
+      const reviews = await this.reviewRepository
+        .scope('fullTextSearch')
+        .findAll({
+          where: {
+            [Op.or]: [
+              { title: { [Op.like]: `%${query}%` } },
+              { content: { [Op.like]: `%${query}%` } },
+            ],
+          },
+          replacements: {
+            query: query,
+          },
+        });
+
+      const comments = await this.commentRepository
+        .scope('fullTextSearch')
+        .findAll({
+          where: {
+            [Op.or]: [
+              { commentTitle: { [Op.like]: `%${query}%` } },
+              { commentText: { [Op.like]: `%${query}%` } },
+            ],
+          },
+          replacements: {
+            query: query,
+          },
+        });
+
+      return { reviews, comments };
+    } catch (error) {
       console.error(error);
     }
   }

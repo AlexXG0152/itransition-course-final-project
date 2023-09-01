@@ -15,6 +15,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Review } from './entities/review.entity';
+import { Comment } from '../comments/entities/comment.entity';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -31,7 +32,7 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get All Review' })
   @ApiResponse({ status: 200, type: Review })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.reviewsService.findAll();
@@ -39,7 +40,7 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get ONE Review by ID' })
   @ApiResponse({ status: 200, type: Review })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reviewsService.findOne(+id);
@@ -71,5 +72,12 @@ export class ReviewsController {
   @Post(':id/like')
   likeReview(@Param('id') reviewID: number, @Req() req: Request) {
     return this.reviewsService.likeReview(reviewID, req);
+  }
+
+  @ApiOperation({ summary: 'Find All Reviews By FullText Search' })
+  @ApiResponse({ status: 200, type: Review && Comment })
+  @Get('/search/:query')
+  findAllByFullTextSearch(@Param('query') query: string) {
+    return this.reviewsService.findAllByFullTextSearch(query);
   }
 }

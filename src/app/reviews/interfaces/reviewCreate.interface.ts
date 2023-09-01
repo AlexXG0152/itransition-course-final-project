@@ -1,7 +1,7 @@
 export interface IReviewCreateAttrs {
   id: number;
   title: string;
-  category: string;
+  // category: string;
   tags: string;
   content: string;
   imageslinks?: string;

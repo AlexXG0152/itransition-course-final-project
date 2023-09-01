@@ -14,22 +14,11 @@ export class CreateReviewDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(1, { message: 'Review title is too short' })
-  @MaxLength(100, { message: 'Review title is too long' })
   @ApiProperty({
     example: 'Review title',
-    description: 'Review title from 1 to 100 symbols',
+    description: 'Review title from 1 symbol',
   })
   readonly title: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1, { message: 'Review work category name is too short' })
-  @MaxLength(100, { message: 'Review work category name is too long' })
-  @ApiProperty({
-    example: 'Review work category name',
-    description: 'Review work category name from 1 to 100 symbols',
-  })
-  readonly category: string;
 
   @IsString()
   @IsNotEmpty()
@@ -53,8 +42,8 @@ export class CreateReviewDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(0, { message: 'Review images links (optional) is too short' })
-  @MaxLength(255, { message: 'Review images links (optional) is too long' })
+  // @MinLength(0, { message: 'Review images links (optional) is too short' })
+  // @MaxLength(255, { message: 'Review images links (optional) is too long' })
   @ApiProperty({
     example: 'Review images links (optional)',
     description: 'Review images links (optional) from 0 to 20 images',
