@@ -31,7 +31,10 @@ export class UsersService {
   async findAll() {
     try {
       const users = await this.userRepository.findAll({
-        include: { all: true },
+        // include: { all: true },
+        attributes: {
+          exclude: ['password'],
+        },
       });
       return users;
     } catch (error) {
@@ -41,7 +44,13 @@ export class UsersService {
 
   async findOne(id: number) {
     try {
-      return await this.userRepository.findOne({ where: { id } });
+      return await this.userRepository.findOne({
+        where: { id },
+        // include: { all: true },
+        attributes: {
+          exclude: ['password'],
+        },
+      });
     } catch (error) {
       console.error(error);
     }

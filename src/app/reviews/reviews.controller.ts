@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -36,6 +37,14 @@ export class ReviewsController {
   @Get()
   findAll() {
     return this.reviewsService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get All Review' })
+  @ApiResponse({ status: 200, type: Review })
+  // @UseGuards(JwtAuthGuard)
+  @Get('/list')
+  getReviewsByParams(@Query() params: any) {
+    return this.reviewsService.getReviewsByParams(params);
   }
 
   @ApiOperation({ summary: 'Get ONE Review by ID' })

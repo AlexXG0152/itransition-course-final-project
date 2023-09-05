@@ -70,6 +70,21 @@ export class ReviewsService {
     }
   }
 
+  async getReviewsByParams(params) {
+    try {
+      return await this.reviewRepository.findAndCountAll({
+        limit: +params.quantity,
+        offset: +params.offset,
+        order: [[params.order, params.direction]],
+        attributes: {
+          exclude: ['deletedAt'],
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async update(id: number, updateReviewDto: UpdateReviewDto) {
     try {
       return await this.reviewRepository.update(updateReviewDto, {
