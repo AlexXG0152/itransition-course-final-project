@@ -3,13 +3,13 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './entities/review.entity';
-import { User } from '../users/entities/user.entity';
 import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
 import sequelize from 'sequelize';
 import { Comment } from '../comments/entities/comment.entity';
 import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
+import { Tag } from './entities/tag.entity';
 
 @Injectable()
 export class ReviewsService {
@@ -17,7 +17,7 @@ export class ReviewsService {
     @InjectModel(Product) private productRepository: typeof Product,
     @InjectModel(Review) private reviewRepository: typeof Review,
     @InjectModel(Like) private likeRepository: typeof Like,
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Tag) private tagRepository: typeof Tag,
   ) {}
 
   async create(
@@ -42,6 +42,15 @@ export class ReviewsService {
         userId: userId,
       });
 
+      const tagModels = await Promise.all(
+        createReviewDto.tags.map((tagName) =>
+          this.tagRepository.findOrCreate({ where: { name: tagName } }),
+        ),
+      );
+
+      const associatedTags = tagModels.map((tagModel) => tagModel[0]);
+      await review.$set('tags', associatedTags);
+
       return review;
     } catch (error) {
       console.error(error);
@@ -51,7 +60,46 @@ export class ReviewsService {
   async findAll(): Promise<Review[]> {
     try {
       return await this.reviewRepository.findAll({
-        include: [Product, Comment, Category, Subcategory],
+        include: [
+          {
+            model: Product,
+            as: 'product',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Comment,
+            as: 'comments',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Category,
+            as: 'categoryID',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Subcategory,
+            as: 'subcategoryID',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
       });
     } catch (error) {
       console.error(error);
@@ -61,7 +109,46 @@ export class ReviewsService {
   async findOne(id: number) {
     try {
       return await this.reviewRepository.findByPk(id, {
-        include: [Product, Comment, Category, Subcategory],
+        include: [
+          {
+            model: Product,
+            as: 'product',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Comment,
+            as: 'comments',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Category,
+            as: 'categoryID',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Subcategory,
+            as: 'subcategoryID',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+          },
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+            },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
       });
     } catch (error) {
       console.error(error);

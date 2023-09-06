@@ -6,6 +6,7 @@ import {
   BelongsTo,
   ForeignKey,
   HasMany,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { IReviewCreateAttrs } from '../interfaces/reviewCreate.interface';
@@ -14,6 +15,8 @@ import { Product } from 'src/app/product/entities/product.entity';
 import { Comment } from 'src/app/comments/entities/comment.entity';
 import { Category } from 'src/app/product/entities/category.entity';
 import { Subcategory } from 'src/app/product/entities/subcategory.entity';
+import { ReviewTag } from './review-tag.entity';
+import { Tag } from './tag.entity';
 
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
@@ -42,36 +45,6 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   title: string;
 
   @ApiProperty({
-    example: 'Review work category name',
-    description: 'Review work category name from 1 to 100 symbols',
-  })
-  @Column({
-    type: DataType.STRING(100),
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      len: [1, 100],
-    },
-  })
-  category: string;
-
-  @ApiProperty({
-    example: 'Review work tags',
-    description: 'Review work tags from 1 to 200 symbols',
-  })
-  @Column({
-    type: DataType.STRING(200),
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      len: [1, 200],
-    },
-  })
-  tags: string;
-
-  @ApiProperty({
     example: 'Review content',
     description: 'Review content from 1 to 200 symbols',
   })
@@ -91,12 +64,12 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     description: 'Review images links (optional) from 0 to 20 images',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT('medium'),
     allowNull: true,
     validate: {
       notNull: false,
       notEmpty: false,
-      len: [1, 255],
+      len: [1, 6000],
     },
   })
   imageslinks: string;
@@ -201,6 +174,9 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     },
   })
   subcategoryId: number;
+
+  @BelongsToMany(() => Tag, () => ReviewTag)
+  tags: Tag[];
 
   @BelongsTo(() => User)
   user: User;

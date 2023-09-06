@@ -10,6 +10,8 @@ import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
 import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
+import { Tag } from './entities/tag.entity';
+import { ReviewTag } from './entities/review-tag.entity';
 
 @Module({
   controllers: [ReviewsController],
@@ -20,6 +22,8 @@ import { Subcategory } from '../product/entities/subcategory.entity';
       Review,
       Product,
       Like,
+      Tag,
+      ReviewTag,
       Category,
       Subcategory,
     ]),
