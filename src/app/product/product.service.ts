@@ -42,7 +42,7 @@ export class ProductsService {
   async findAll() {
     try {
       return await this.productRepository.findAll({
-        include: [Review, Category, Subcategory],
+        include: [Review, Category, Subcategory, Rating],
       });
     } catch (error) {
       console.error(error);
@@ -52,7 +52,7 @@ export class ProductsService {
   async findOne(id: number) {
     try {
       return await this.productRepository.findByPk(id, {
-        include: [Review, Category, Subcategory],
+        include: [Review, Category, Subcategory, Rating],
       });
     } catch (error) {
       console.error(error);
@@ -154,7 +154,9 @@ export class ProductsService {
       }
     } catch (error) {
       await transaction.rollback();
-      console.error(error);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST, {
+        cause: new Error('error'),
+      });
     }
   }
 

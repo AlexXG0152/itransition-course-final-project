@@ -56,7 +56,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Rate Product' })
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
-  @Post(':id/rate')
+  @Post('/rate')
   rate(@Req() req: Request, @Body() rateProductDto: RateProductDto) {
     return this.productService.rateProduct(req, rateProductDto);
   }
