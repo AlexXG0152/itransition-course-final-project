@@ -12,6 +12,7 @@ import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
 import { ReviewTag } from './entities/review-tag.entity';
+import { Comment } from '../comments/entities/comment.entity';
 
 @Module({
   controllers: [ReviewsController],
@@ -26,6 +27,7 @@ import { ReviewTag } from './entities/review-tag.entity';
       ReviewTag,
       Category,
       Subcategory,
+      Comment,
     ]),
     RolesModule,
     forwardRef(() => AuthModule),

@@ -1,4 +1,10 @@
-import { Table, ForeignKey, Column, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  ForeignKey,
+  Column,
+  DataType,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { Review } from './review.entity';
 import { Tag } from './tag.entity';
 import { Model } from 'sequelize-typescript';
@@ -29,4 +35,7 @@ export class ReviewTag extends Model<ReviewTag> {
     },
   })
   tagId: number;
+
+  @BelongsTo(() => Tag)
+  tags: Tag[];
 }

@@ -17,10 +17,9 @@ export class CreateReviewDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(1, { message: 'Review title is too short' })
-  @MaxLength(100, { message: 'Review title is too long' })
   @ApiProperty({
     example: 'Review title',
-    description: 'Review title from 1 to 100 symbols',
+    description: 'Review title from 1 symbol',
   })
   readonly title: string;
 

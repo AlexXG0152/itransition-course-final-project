@@ -6,11 +6,20 @@ import {
   Index,
   BelongsTo,
   ForeignKey,
+  Scopes,
+  Sequelize,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { Review } from 'src/app/reviews/entities/review.entity';
 import { User } from 'src/app/users/entities/user.entity';
 
+@Scopes(() => ({
+  fullTextSearch: {
+    where: Sequelize.literal(
+      'MATCH(commentTitle, commentText) AGAINST(:query)',
+    ),
+  },
+}))
 @Table({ tableName: 'comments', paranoid: true })
 export class Comment extends Model<Comment> {
   @ApiProperty({ example: '1', description: 'Uniq comment ID' })
@@ -26,7 +35,7 @@ export class Comment extends Model<Comment> {
     example: 'Comment Title',
     description: 'Comment title from 1 to 255 symbols',
   })
-  @Index('product_title_index')
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -39,6 +48,7 @@ export class Comment extends Model<Comment> {
   commentTitle: string;
 
   @ApiProperty({ example: 'Comment Text', description: 'Comment text' })
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
     type: DataType.TEXT,
     validate: {

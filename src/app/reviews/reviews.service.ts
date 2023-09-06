@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import sequelize from 'sequelize';
+import { Op } from 'sequelize';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './entities/review.entity';
 import { Product } from '../product/entities/product.entity';
 import { Like } from './entities/like.entity';
-import sequelize from 'sequelize';
 import { Comment } from '../comments/entities/comment.entity';
 import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
+import { User } from '../users/entities/user.entity';
+import { ReviewTag } from './entities/review-tag.entity';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class ReviewsService {
@@ -18,6 +22,9 @@ export class ReviewsService {
     @InjectModel(Review) private reviewRepository: typeof Review,
     @InjectModel(Like) private likeRepository: typeof Like,
     @InjectModel(Tag) private tagRepository: typeof Tag,
+    @InjectModel(ReviewTag) private reviewTagRepository: typeof ReviewTag,
+    @InjectModel(Comment) private commentRepository: typeof Comment,
+    @InjectModel(User) private userRepository: typeof User,
   ) {}
 
   async create(
@@ -155,6 +162,21 @@ export class ReviewsService {
     }
   }
 
+  async getReviewsByParams(params) {
+    try {
+      return await this.reviewRepository.findAndCountAll({
+        limit: +params.quantity,
+        offset: +params.offset,
+        order: [[params.order, params.direction]],
+        attributes: {
+          exclude: ['deletedAt'],
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async update(id: number, updateReviewDto: UpdateReviewDto) {
     try {
       return await this.reviewRepository.update(updateReviewDto, {
@@ -236,5 +258,78 @@ export class ReviewsService {
       await transaction.rollback();
       console.error(error);
     }
+  }
+
+  async findAllByFullTextSearch(query: string): Promise<{
+    reviews: Review[];
+    comments: Comment[];
+  }> {
+    try {
+      const reviews = await this.reviewRepository
+        .scope('fullTextSearch')
+        .findAll({
+          where: {
+            [Op.or]: [
+              { title: { [Op.like]: `%${query}%` } },
+              { content: { [Op.like]: `%${query}%` } },
+            ],
+          },
+          replacements: {
+            query: query,
+          },
+        });
+
+      const comments = await this.commentRepository
+        .scope('fullTextSearch')
+        .findAll({
+          where: {
+            [Op.or]: [
+              { commentTitle: { [Op.like]: `%${query}%` } },
+              { commentText: { [Op.like]: `%${query}%` } },
+            ],
+          },
+          replacements: {
+            query: query,
+          },
+        });
+
+      return { reviews, comments };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getPopularTags(limit = 20) {
+    const topTags = await this.reviewTagRepository.findAll({
+      attributes: ['tagId', [Sequelize.literal('COUNT(tagId)'), 'count']],
+      include: [
+        {
+          model: this.tagRepository,
+          attributes: ['name'],
+        },
+      ],
+      group: ['tagId'],
+      order: [[Sequelize.literal('count'), 'DESC']],
+      limit: limit,
+    });
+
+    return topTags.map((tag: any) => ({
+      tagId: tag.tagId,
+      name: tag.tags.name,
+      count: tag.get('count'),
+    }));
+  }
+
+  async searchTags(query: string) {
+    return await this.tagRepository.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${query}%`,
+        },
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+      },
+    });
   }
 }

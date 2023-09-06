@@ -6,6 +6,9 @@ import {
   BelongsTo,
   ForeignKey,
   HasMany,
+  Scopes,
+  Sequelize,
+  Index,
   BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
@@ -18,6 +21,11 @@ import { Subcategory } from 'src/app/product/entities/subcategory.entity';
 import { ReviewTag } from './review-tag.entity';
 import { Tag } from './tag.entity';
 
+@Scopes(() => ({
+  fullTextSearch: {
+    where: Sequelize.literal('MATCH(title, content) AGAINST(:query)'),
+  },
+}))
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
   @ApiProperty({ example: '1', description: 'Uniq review ID' })
@@ -31,15 +39,16 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
 
   @ApiProperty({
     example: 'Review title',
-    description: 'Review title from 1 to 100 symbols',
+    description: 'Review title ',
   })
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
-    type: DataType.STRING(100),
+    type: DataType.STRING,
     allowNull: false,
     validate: {
       notNull: true,
       notEmpty: true,
-      len: [1, 100],
+      min: 1,
     },
   })
   title: string;
@@ -48,6 +57,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     example: 'Review content',
     description: 'Review content from 1 to 200 symbols',
   })
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
     type: DataType.TEXT('medium'),
     allowNull: false,

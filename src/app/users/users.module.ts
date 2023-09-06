@@ -7,7 +7,6 @@ import { Role } from '../roles/entities/role.entity';
 import { UserRoles } from '../roles/entities/user-roles.entity';
 import { RolesModule } from '../roles/roles.module';
 import { AuthModule } from '../auth/auth.module';
-// import { ProductReview } from '../reviews/entities/product-review.entity';
 import { Review } from '../reviews/entities/review.entity';
 import { Product } from '../product/entities/product.entity';
 import { Rating } from '../product/entities/rating.entity';
