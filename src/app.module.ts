@@ -21,6 +21,8 @@ import { FirebaseModule } from './app/firebase/firebase.module';
 import { CommentsModule } from './app/comments/comments.module';
 import { Category } from './app/product/entities/category.entity';
 import { Subcategory } from './app/product/entities/subcategory.entity';
+import { Tag } from './app/reviews/entities/tag.entity';
+import { ReviewTag } from './app/reviews/entities/review-tag.entity';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { Subcategory } from './app/product/entities/subcategory.entity';
         Role,
         UserRoles,
         Review,
+        Tag,
+        ReviewTag,
         Product,
         Rating,
         Like,

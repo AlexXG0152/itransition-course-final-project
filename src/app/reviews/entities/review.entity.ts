@@ -6,6 +6,10 @@ import {
   BelongsTo,
   ForeignKey,
   HasMany,
+  Scopes,
+  Sequelize,
+  Index,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { IReviewCreateAttrs } from '../interfaces/reviewCreate.interface';
@@ -14,7 +18,14 @@ import { Product } from 'src/app/product/entities/product.entity';
 import { Comment } from 'src/app/comments/entities/comment.entity';
 import { Category } from 'src/app/product/entities/category.entity';
 import { Subcategory } from 'src/app/product/entities/subcategory.entity';
+import { ReviewTag } from './review-tag.entity';
+import { Tag } from './tag.entity';
 
+@Scopes(() => ({
+  fullTextSearch: {
+    where: Sequelize.literal('MATCH(title, content) AGAINST(:query)'),
+  },
+}))
 @Table({ tableName: 'reviews', paranoid: true })
 export class Review extends Model<Review, IReviewCreateAttrs> {
   @ApiProperty({ example: '1', description: 'Uniq review ID' })
@@ -28,53 +39,25 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
 
   @ApiProperty({
     example: 'Review title',
-    description: 'Review title from 1 to 100 symbols',
+    description: 'Review title ',
   })
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
-    type: DataType.STRING(100),
+    type: DataType.STRING,
     allowNull: false,
     validate: {
       notNull: true,
       notEmpty: true,
-      len: [1, 100],
+      min: 1,
     },
   })
   title: string;
 
   @ApiProperty({
-    example: 'Review work category name',
-    description: 'Review work category name from 1 to 100 symbols',
-  })
-  @Column({
-    type: DataType.STRING(100),
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      len: [1, 100],
-    },
-  })
-  category: string;
-
-  @ApiProperty({
-    example: 'Review work tags',
-    description: 'Review work tags from 1 to 200 symbols',
-  })
-  @Column({
-    type: DataType.STRING(200),
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      len: [1, 200],
-    },
-  })
-  tags: string;
-
-  @ApiProperty({
     example: 'Review content',
     description: 'Review content from 1 to 200 symbols',
   })
+  @Index({ type: 'FULLTEXT', name: 'title_content' })
   @Column({
     type: DataType.TEXT('medium'),
     allowNull: false,
@@ -91,12 +74,12 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     description: 'Review images links (optional) from 0 to 20 images',
   })
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT('medium'),
     allowNull: true,
     validate: {
       notNull: false,
       notEmpty: false,
-      len: [1, 255],
+      len: [1, 6000],
     },
   })
   imageslinks: string;
@@ -201,6 +184,9 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
     },
   })
   subcategoryId: number;
+
+  @BelongsToMany(() => Tag, () => ReviewTag)
+  tags: Tag[];
 
   @BelongsTo(() => User)
   user: User;

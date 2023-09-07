@@ -10,38 +10,40 @@ import {
   IsNumber,
   Min,
   Max,
+  IsArray,
+  ArrayMaxSize,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   @IsString()
   @IsNotEmpty()
   @MinLength(5, { message: 'Review title is too short' })
-  @MaxLength(100, { message: 'Review title is too long' })
   @ApiProperty({
     example: 'Review title',
-    description: 'Review title from 1 to 100 symbols',
+    description: 'Review title from 1 symbol',
   })
   readonly title: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(5, { message: 'Review work category name is too short' })
-  @MaxLength(100, { message: 'Review work category name is too long' })
-  @ApiProperty({
-    example: 'Review work category name',
-    description: 'Review work category name from 1 to 100 symbols',
-  })
-  readonly category: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // @MinLength(5, { message: 'Review work category name is too short' })
+  // @MaxLength(100, { message: 'Review work category name is too long' })
+  // @ApiProperty({
+  //   example: 'Review work category name',
+  //   description: 'Review work category name from 1 to 100 symbols',
+  // })
+  // readonly category: string;
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  @MinLength(5, { message: 'Review work tags is too short' })
-  @MaxLength(100, { message: 'Review work tags is too long' })
+  @ArrayMinSize(1, { message: 'Review tags is too short' })
+  @ArrayMaxSize(10, { message: 'Review tags is too long' })
   @ApiProperty({
-    example: 'Review work tags',
-    description: 'Review work tags from 1 to 200 symbols',
+    example: 'Review tags',
+    description: 'Review tags from 1 to 10 tags',
   })
-  readonly tags: string;
+  readonly tags: any[];
 
   @IsString()
   @IsNotEmpty()
@@ -56,7 +58,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   @IsString()
   @IsOptional()
   @MinLength(0, { message: 'Review images links (optional) is too short' })
-  @MaxLength(255, { message: 'Review images links (optional) is too long' })
+  @MaxLength(6000, { message: 'Review images links (optional) is too long' })
   @ApiProperty({
     example: 'Review images links (optional)',
     description: 'Review images links (optional) from 0 to 20 images',
@@ -72,16 +74,6 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
     description: 'Review author rating mark from 0 to 10',
   })
   readonly reviewRating: number;
-
-  //   @IsNumber()
-  //   @IsNotEmpty()
-  //   @Min(5, { message: 'Review author ID is too short' })
-  //   @Max(100, { message: 'Review author ID is too long' })
-  //   @ApiProperty({
-  //     example: 'Review author ID',
-  //     description: 'Review author ID',
-  //   })
-  //   readonly userId: number;
 
   @IsString()
   @MinLength(1, { message: 'Product Name is too short' })

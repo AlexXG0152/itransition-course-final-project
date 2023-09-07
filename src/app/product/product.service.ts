@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import sequelize from 'sequelize';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { Product } from './entities/product.entity';
 import { Review } from '../reviews/entities/review.entity';
 import { Rating } from './entities/rating.entity';
 import { RateProductDto } from './dto/rate-product.dto';
-import sequelize from 'sequelize';
-import { IProductDBAnswer } from './interfaces/IProductDBAnswer.interface';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './entities/category.entity';
@@ -43,7 +42,7 @@ export class ProductsService {
   async findAll() {
     try {
       return await this.productRepository.findAll({
-        include: [Review, Category, Subcategory],
+        include: [Review, Category, Subcategory, Rating],
       });
     } catch (error) {
       console.error(error);
@@ -53,7 +52,7 @@ export class ProductsService {
   async findOne(id: number) {
     try {
       return await this.productRepository.findByPk(id, {
-        include: [Review, Category, Subcategory],
+        include: [Review, Category, Subcategory, Rating],
       });
     } catch (error) {
       console.error(error);
@@ -125,7 +124,7 @@ export class ProductsService {
       );
 
       if (setRating) {
-        const product: IProductDBAnswer = await this.productRepository.findOne({
+        const product: any = await this.productRepository.findOne({
           where: { id: rateProductDto.productId },
           include: [
             {
@@ -155,7 +154,9 @@ export class ProductsService {
       }
     } catch (error) {
       await transaction.rollback();
-      console.error(error);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST, {
+        cause: new Error('error'),
+      });
     }
   }
 
@@ -178,10 +179,18 @@ export class ProductsService {
   async findAllCategory() {
     try {
       return await this.categoryRepository.findAll({
-        include: [Subcategory],
+        include: [
+          {
+            model: Subcategory,
+            as: 'subcategories',
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+          },
+        ],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
+        // raw: true,
+        nest: true,
       });
     } catch (error) {
       console.error(error);
@@ -191,10 +200,18 @@ export class ProductsService {
   async findAllSubcategory() {
     try {
       return await this.subcategoryRepository.findAll({
-        include: [Category],
+        include: [
+          {
+            model: Category,
+            as: 'category',
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+          },
+        ],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
+        // raw: true,
+        nest: true,
       });
     } catch (error) {
       console.error(error);

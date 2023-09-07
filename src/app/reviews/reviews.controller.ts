@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -15,11 +16,20 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Review } from './entities/review.entity';
+import { Comment } from '../comments/entities/comment.entity';
+import { FullTextSearchService } from './full-text-search.service';
+import { TagsService } from './tags.service';
+import { LikesService } from './likes.service';
 
 @ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(
+    private readonly reviewsService: ReviewsService,
+    private readonly fullTextSearchService: FullTextSearchService,
+    private readonly tagsService: TagsService,
+    private readonly likesService: LikesService,
+  ) {}
 
   @ApiOperation({ summary: 'Create Review' })
   @ApiResponse({ status: 201, type: Review })
@@ -31,15 +41,31 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get All Review' })
   @ApiResponse({ status: 200, type: Review })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.reviewsService.findAll();
   }
 
+  @ApiOperation({ summary: 'Get All Review' })
+  @ApiResponse({ status: 200, type: Review })
+  // @UseGuards(JwtAuthGuard)
+  @Get('/list')
+  getReviewsByParams(@Query() params: any) {
+    return this.reviewsService.getReviewsByParams(params);
+  }
+
+  @ApiOperation({ summary: 'Get All Reviews By Tag Name' })
+  @ApiResponse({ status: 200, type: Review })
+  // @UseGuards(JwtAuthGuard)
+  @Get('/tags')
+  getReviewsByTagName(@Query() params: any) {
+    return this.tagsService.getReviewsByTag(params);
+  }
+
   @ApiOperation({ summary: 'Get ONE Review by ID' })
   @ApiResponse({ status: 200, type: Review })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reviewsService.findOne(+id);
@@ -68,8 +94,29 @@ export class ReviewsController {
   @ApiOperation({ summary: 'Like Review' })
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
-  @Post(':id/like')
+  @Get(':id/like')
   likeReview(@Param('id') reviewID: number, @Req() req: Request) {
-    return this.reviewsService.likeReview(reviewID, req);
+    return this.likesService.likeReview(reviewID, req);
+  }
+
+  @ApiOperation({ summary: 'Find All Reviews By FullText Search' })
+  @ApiResponse({ status: 200, type: Review && Comment })
+  @Get('/search/:query')
+  findAllByFullTextSearch(@Param('query') query: string) {
+    return this.fullTextSearchService.findAllByFullTextSearch(query);
+  }
+
+  @ApiOperation({ summary: 'Get 20 most popular tags' })
+  @ApiResponse({ status: 200, type: Review && Comment })
+  @Get('/searchTags/getPopularTags')
+  getPopularTags() {
+    return this.tagsService.getPopularTags();
+  }
+
+  @ApiOperation({ summary: 'Search tags' })
+  @ApiResponse({ status: 200, type: Review && Comment })
+  @Get('/searchTags/:query')
+  searchTags(@Param('query') query: string) {
+    return this.tagsService.searchTags(query);
   }
 }
