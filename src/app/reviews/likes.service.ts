@@ -72,7 +72,7 @@ export class LikesService {
       }
     } catch (error) {
       await transaction.rollback();
-      console.error(error);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -20,6 +20,7 @@ import { Category } from 'src/app/product/entities/category.entity';
 import { Subcategory } from 'src/app/product/entities/subcategory.entity';
 import { ReviewTag } from './review-tag.entity';
 import { Tag } from './tag.entity';
+import { Like } from './like.entity';
 
 @Scopes(() => ({
   fullTextSearch: {
@@ -202,4 +203,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @HasMany(() => Like)
+  likes: Like[];
 }

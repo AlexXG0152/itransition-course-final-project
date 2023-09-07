@@ -154,9 +154,7 @@ export class ProductsService {
       }
     } catch (error) {
       await transaction.rollback();
-      throw new HttpException(error, HttpStatus.BAD_REQUEST, {
-        cause: new Error('error'),
-      });
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -8,6 +8,7 @@ import { Comment } from '../comments/entities/comment.entity';
 import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
+import { Like } from './entities/like.entity';
 
 @Injectable()
 export class ReviewsService {
@@ -94,6 +95,13 @@ export class ReviewsService {
             },
             through: {
               attributes: [],
+            },
+          },
+          {
+            model: Like,
+            as: 'likes',
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt', 'deletedAt'],
             },
           },
         ],
