@@ -102,6 +102,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   reviewRating: number;
 
   @ApiProperty({ example: 'Review likes', description: 'Review likes count' })
+  @Index('like_index')
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
