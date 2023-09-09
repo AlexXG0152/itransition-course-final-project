@@ -34,7 +34,7 @@ export interface ReviewsEntity {
   id: number;
   title: string;
   content: string;
-  imageslinks: string;
+  imageslinks?: string;
   reviewRating: number;
   like?: number | null;
   userId: number;

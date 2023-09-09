@@ -77,11 +77,6 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   @Column({
     type: DataType.TEXT('medium'),
     allowNull: true,
-    validate: {
-      notNull: false,
-      notEmpty: false,
-      len: [1, 6000],
-    },
   })
   imageslinks: string;
 

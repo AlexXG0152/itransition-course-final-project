@@ -45,7 +45,6 @@ export class CreateReviewDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(0, { message: 'Review images links (optional) is too short' })
   @MaxLength(6000, { message: 'Review images links (optional) is too long' })
   @ApiProperty({
     example: 'Review images links (optional)',
