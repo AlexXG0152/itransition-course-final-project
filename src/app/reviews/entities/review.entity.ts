@@ -20,6 +20,7 @@ import { Category } from 'src/app/product/entities/category.entity';
 import { Subcategory } from 'src/app/product/entities/subcategory.entity';
 import { ReviewTag } from './review-tag.entity';
 import { Tag } from './tag.entity';
+import { Like } from './like.entity';
 
 @Scopes(() => ({
   fullTextSearch: {
@@ -76,11 +77,6 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   @Column({
     type: DataType.TEXT('medium'),
     allowNull: true,
-    validate: {
-      notNull: false,
-      notEmpty: false,
-      len: [1, 6000],
-    },
   })
   imageslinks: string;
 
@@ -101,6 +97,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
   reviewRating: number;
 
   @ApiProperty({ example: 'Review likes', description: 'Review likes count' })
+  @Index('like_index')
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
@@ -202,4 +199,7 @@ export class Review extends Model<Review, IReviewCreateAttrs> {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @HasMany(() => Like)
+  likes: Like[];
 }

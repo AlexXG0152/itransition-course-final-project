@@ -8,6 +8,10 @@ import { RolesService } from '../roles/roles.service';
 import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
+import { Sequelize } from 'sequelize-typescript';
+import { Review } from '../reviews/entities/review.entity';
+import { Op } from 'sequelize';
+import { IUser } from './interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -32,9 +36,27 @@ export class UsersService {
     try {
       const users = await this.userRepository.findAll({
         // include: { all: true },
+        include: [
+          {
+            model: Review,
+            attributes: [],
+            where: { like: { [Op.ne]: null } },
+            required: false,
+          },
+        ],
         attributes: {
           exclude: ['password'],
+          include: [
+            [
+              Sequelize.cast(
+                Sequelize.fn('SUM', Sequelize.col('reviews.like')),
+                'SIGNED',
+              ),
+              'totalLikes',
+            ],
+          ],
         },
+        group: ['User.id'],
       });
       return users;
     } catch (error) {
@@ -42,15 +64,39 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<IUser> {
     try {
-      return await this.userRepository.findOne({
+      const user = await this.userRepository.findOne({
         where: { id },
-        // include: { all: true },
         attributes: {
           exclude: ['password'],
+          include: [
+            [
+              Sequelize.cast(
+                Sequelize.fn('SUM', Sequelize.col('reviews.like')),
+                'SIGNED',
+              ),
+              'totalLikes',
+            ],
+          ],
         },
+        include: [
+          {
+            model: Review,
+            attributes: [],
+            where: { like: { [Op.ne]: null } },
+            required: false,
+          },
+        ],
+        raw: true,
+        nest: true,
       });
+
+      if (user) {
+        delete user.reviews;
+      }
+
+      return user;
     } catch (error) {
       console.error(error);
     }
@@ -69,13 +115,22 @@ export class UsersService {
 
   async findMe(req: any) {
     try {
-      return await User.findOne({
+      const user: any = await User.findOne({
         where: { id: req.user.id },
         include: { all: true },
         attributes: {
-          exclude: ['password', 'banned', 'banreason', 'unbanreason'],
+          exclude: ['password', 'banreason', 'unbanreason'],
         },
       });
+
+      if (user) {
+        const totalLikes = await Review.sum('like', {
+          where: { userId: user.id },
+        });
+        user.dataValues.totalLikes = totalLikes;
+      }
+
+      return user;
     } catch (error) {
       console.error(error);
     }
@@ -153,3 +208,39 @@ export class UsersService {
     }
   }
 }
+
+// {
+//   model: Role,
+//   as: 'roles',
+//   attributes: {
+//     exclude: ['id', 'createdAt', 'updatedAt', 'deletedAt'],
+//   },
+// },
+// {
+//   model: Review,
+//   as: 'reviews',
+//   attributes: {
+//     exclude: ['updatedAt', 'deletedAt'],
+//   },
+// },
+// {
+//   model: Comment,
+//   as: 'comments',
+//   attributes: {
+//     exclude: ['deletedAt'],
+//   },
+// },
+// {
+//   model: Rating,
+//   as: 'ratings',
+//   attributes: {
+//     exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+//   },
+// },
+// {
+//   model: Like,
+//   as: 'likes',
+//   attributes: {
+//     exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+//   },
+// },

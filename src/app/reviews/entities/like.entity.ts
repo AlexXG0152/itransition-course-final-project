@@ -22,7 +22,7 @@ export class Like extends Model<Like> {
   })
   id: number;
 
-  @ApiProperty({ example: 'userId', description: 'userId who give Like' })
+  @ApiProperty({ example: 'userId', description: 'userId who gave Like' })
   @ForeignKey(() => User)
   @Index('userId_index')
   @Column({
@@ -36,7 +36,7 @@ export class Like extends Model<Like> {
   })
   userId: number;
 
-  @ApiProperty({ example: 'reviewId', description: 'reviewId for Like' })
+  @ApiProperty({ example: 'reviewId', description: 'Liked review Id' })
   @ForeignKey(() => Review)
   @Column({
     type: DataType.INTEGER,
