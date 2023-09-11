@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +11,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto/login-user.dto';
+import { SocialAuthUserDto } from './dto/social-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,10 +26,10 @@ export class AuthService {
   }
 
   async registration(createUserDto: CreateUserDto) {
-    const candidate = await this.userService.findOneByEmail(
+    const existingUser = await this.userService.findOneByEmail(
       createUserDto.email,
     );
-    if (candidate) {
+    if (existingUser) {
       throw new HttpException(
         'User with this email already registered',
         HttpStatus.BAD_REQUEST,
@@ -36,10 +38,12 @@ export class AuthService {
 
     const hashPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const user = await this.userService.create({
+    const newUser = {
       ...createUserDto,
       password: hashPassword,
-    });
+    };
+
+    const user = await this.userService.create(newUser);
 
     return this.generateToken(user);
   }
@@ -64,16 +68,62 @@ export class AuthService {
   private async validateUser(loginUserDto: LoginUserDto) {
     try {
       const user = await this.userService.findOneByEmail(loginUserDto.email);
+      if (!user) {
+        throw new UnauthorizedException({ message: 'Bad email or password' });
+      }
+
       const passwordEquals = await bcrypt.compare(
         loginUserDto.password,
         user.password,
       );
 
-      if (user && passwordEquals) {
-        return user;
+      if (!passwordEquals) {
+        throw new UnauthorizedException({ message: 'Bad email or password' });
       }
+
+      return user;
     } catch (error) {
       throw new UnauthorizedException({ message: 'Bad email or password' });
+    }
+  }
+
+  private async findOrCreateUser(email: string, name: string) {
+    try {
+      const user = await this.userService.findOneByEmail(email);
+      if (user) {
+        return this.generateToken(user);
+      }
+
+      const hashPassword = await bcrypt.hash(email, 10);
+
+      const newUser = {
+        name,
+        email,
+        password: hashPassword,
+      };
+
+      const createdUser = await this.userService.create(newUser);
+
+      return this.generateToken(createdUser);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Error occurred while finding or creating user.',
+      );
+    }
+  }
+
+  async findOrCreateUserFromSocial(socialUserDto: SocialAuthUserDto) {
+    try {
+      const email = socialUserDto.emails
+        ? socialUserDto?.emails[0]?.value
+        : `${socialUserDto.id}@facebook.com`;
+      return await this.findOrCreateUser(email, socialUserDto.displayName);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Error occurred while finding or creating user.',
+      );
     }
   }
 }
