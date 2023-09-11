@@ -1,7 +1,8 @@
-export class GoogleUserDto {
-  readonly profileUrl: string;
+export class SocialAuthUserDto {
   readonly id: string;
   readonly displayName: string;
+  readonly birthday?: string;
+  readonly profileUrl?: string;
   readonly emails?: Array<{ value: string; verified: 'true' | 'false' }>;
   readonly _raw: string;
   readonly _json: {
@@ -23,4 +24,5 @@ export class GoogleUserDto {
     picture?: string;
     profile?: string;
   };
+  readonly provider: string;
 }

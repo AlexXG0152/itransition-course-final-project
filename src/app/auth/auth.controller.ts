@@ -9,6 +9,7 @@ import {
   UseFacebookAuth,
   UseGoogleAuth,
 } from '@nestjs-hybrid-auth/all';
+import { SocialAuthUserDto } from './dto/social-user.dto';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -49,7 +50,9 @@ export class AuthController {
       profile: result.profile,
     };
 
-    return this.authService.findOrCreateUserFromFacebook(facebookUser.profile);
+    return this.authService.findOrCreateUserFromSocial(
+      facebookUser.profile as SocialAuthUserDto,
+    );
   }
 
   @ApiOperation({ summary: 'Login with Google' })
@@ -73,6 +76,8 @@ export class AuthController {
       profile: result.profile,
     };
 
-    return this.authService.findOrCreateUserFromGoogle(gooogleUser.profile);
+    return this.authService.findOrCreateUserFromSocial(
+      gooogleUser.profile as SocialAuthUserDto,
+    );
   }
 }
