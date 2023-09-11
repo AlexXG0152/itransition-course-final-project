@@ -9,6 +9,7 @@ import {
   UseFacebookAuth,
   UseGoogleAuth,
 } from '@nestjs-hybrid-auth/all';
+import { SocialAuthUserDto } from './dto/social-user.dto';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -32,7 +33,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login with Facebook' })
   @ApiResponse({ status: 200, type: String })
   @UseFacebookAuth()
-  @Get('/facebook')
+  @Get('/facebook/')
   loginWithFacebook() {
     return 'Login with Facebook';
   }
@@ -40,7 +41,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Redirect from Facebook if login OK' })
   @ApiResponse({ status: 200, type: String })
   @UseFacebookAuth()
-  @Get('/facebook/redirect')
+  @Get('/facebook/redirect/')
   facebookCallback(@Req() req: any) {
     const result: FacebookAuthResult = req.hybridAuthResult;
     const facebookUser = {
@@ -49,13 +50,17 @@ export class AuthController {
       profile: result.profile,
     };
 
-    return this.authService.findOrCreateUserFromFacebook(facebookUser.profile);
+    console.log(facebookUser);
+
+    return this.authService.findOrCreateUserFromSocial(
+      facebookUser.profile as SocialAuthUserDto,
+    );
   }
 
   @ApiOperation({ summary: 'Login with Google' })
   @ApiResponse({ status: 200, type: String })
   @UseGoogleAuth()
-  @Get('/google')
+  @Get('/google/')
   loginWithGoogle() {
     return 'Login with Google';
   }
@@ -63,7 +68,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Redirect from Google if login OK' })
   @ApiResponse({ status: 200, type: String })
   @UseGoogleAuth()
-  @Get('/google/redirect')
+  @Get('/google/redirect/')
   googleCallback(@Req() req: any) {
     const result: GoogleAuthResult = req.hybridAuthResult;
 
@@ -73,6 +78,8 @@ export class AuthController {
       profile: result.profile,
     };
 
-    return this.authService.findOrCreateUserFromGoogle(gooogleUser.profile);
+    return this.authService.findOrCreateUserFromSocial(
+      gooogleUser.profile as SocialAuthUserDto,
+    );
   }
 }
