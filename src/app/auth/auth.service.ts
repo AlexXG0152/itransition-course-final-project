@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +11,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto/login-user.dto';
+import { FacebookUserDto } from './dto/facebook-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -74,6 +76,35 @@ export class AuthService {
       }
     } catch (error) {
       throw new UnauthorizedException({ message: 'Bad email or password' });
+    }
+  }
+
+  async findOrCreateUserFromFacebook(facebookUserDto: FacebookUserDto) {
+    try {
+      const user = await this.userService.findOneByEmail(
+        `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
+      );
+      if (user) {
+        return this.generateToken(user);
+      }
+
+      const hashPassword = await bcrypt.hash(
+        `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
+        10,
+      );
+
+      const newUser = await this.userService.create({
+        name: facebookUserDto.displayName,
+        email: `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
+        password: hashPassword,
+      });
+
+      return this.generateToken(newUser);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Error occurred while finding or creating user.',
+      );
     }
   }
 }
