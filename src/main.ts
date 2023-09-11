@@ -11,12 +11,14 @@ export async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
 
+  // app.enableCors({ origin: '*' });
   app.enableCors({
     allowedHeaders: ['content-type', 'authorization'],
     origin: [
       'http://localhost:3000',
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
+      'https://itransition-course-final-project-back.onrender.com/api/v1/auth/facebook',
     ],
     credentials: true,
   });
