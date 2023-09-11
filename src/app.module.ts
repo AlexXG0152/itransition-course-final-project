@@ -24,6 +24,7 @@ import { Subcategory } from './app/product/entities/subcategory.entity';
 import { Tag } from './app/reviews/entities/tag.entity';
 import { ReviewTag } from './app/reviews/entities/review-tag.entity';
 import { FacebookAuthModule } from '@nestjs-hybrid-auth/facebook';
+import { GoogleAuthModule } from '@nestjs-hybrid-auth/google';
 
 @Module({
   imports: [
@@ -69,6 +70,12 @@ import { FacebookAuthModule } from '@nestjs-hybrid-auth/facebook';
       clientSecret: process.env.FACEBOOK_APP_SECRET,
       callbackURL: process.env.FACEBOOK_APP_CALLBACK_URL,
     }),
+    GoogleAuthModule.forRoot({
+      clientID: process.env.GOOGLE_APP_ID,
+      clientSecret: process.env.GOOGLE_APP_SECRET,
+      callbackURL: process.env.GOOGLE_APP_CALLBACK_URL,
+    }),
+
     AuthModule,
     UsersModule,
     RolesModule,

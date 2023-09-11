@@ -12,6 +12,7 @@ import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { LoginUserDto } from './dto/login-user.dto';
 import { FacebookUserDto } from './dto/facebook-user.dto';
+import { GoogleUserDto } from './dto/google-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -81,21 +82,43 @@ export class AuthService {
 
   async findOrCreateUserFromFacebook(facebookUserDto: FacebookUserDto) {
     try {
+      const email = `${facebookUserDto.id}@${facebookUserDto.provider}.com`;
+      const user = await this.userService.findOneByEmail(email);
+      if (user) {
+        return this.generateToken(user);
+      }
+
+      const hashPassword = await bcrypt.hash(email, 10);
+
+      const newUser = await this.userService.create({
+        name: facebookUserDto.displayName,
+        email: email,
+        password: hashPassword,
+      });
+
+      return this.generateToken(newUser);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Error occurred while finding or creating user.',
+      );
+    }
+  }
+
+  async findOrCreateUserFromGoogle(googleUserDto: GoogleUserDto) {
+    try {
       const user = await this.userService.findOneByEmail(
-        `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
+        googleUserDto.emails[0].value,
       );
       if (user) {
         return this.generateToken(user);
       }
 
-      const hashPassword = await bcrypt.hash(
-        `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
-        10,
-      );
+      const hashPassword = await bcrypt.hash(googleUserDto.emails[0].value, 10);
 
       const newUser = await this.userService.create({
-        name: facebookUserDto.displayName,
-        email: `${facebookUserDto.id}@${facebookUserDto.provider}.com`,
+        name: googleUserDto.displayName,
+        email: googleUserDto.emails[0].value,
         password: hashPassword,
       });
 

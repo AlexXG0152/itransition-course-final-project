@@ -14,6 +14,7 @@ export async function bootstrap() {
   app.enableCors({
     allowedHeaders: ['content-type', 'authorization'],
     origin: [
+      'http://localhost:3000',
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
     ],

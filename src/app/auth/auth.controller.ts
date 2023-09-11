@@ -3,7 +3,12 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { FacebookAuthResult, UseFacebookAuth } from '@nestjs-hybrid-auth/all';
+import {
+  FacebookAuthResult,
+  GoogleAuthResult,
+  UseFacebookAuth,
+  UseGoogleAuth,
+} from '@nestjs-hybrid-auth/all';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -32,11 +37,10 @@ export class AuthController {
     return 'Login with Facebook';
   }
 
-  @ApiOperation({ summary: 'Redirect if login OK' })
+  @ApiOperation({ summary: 'Redirect from Facebook if login OK' })
   @ApiResponse({ status: 200, type: String })
   @UseFacebookAuth()
   @Get('/facebook/redirect')
-  // facebookCallback(@Req() req: any): Partial<FacebookAuthResult> {
   facebookCallback(@Req() req: any) {
     const result: FacebookAuthResult = req.hybridAuthResult;
     const facebookUser = {
@@ -46,5 +50,29 @@ export class AuthController {
     };
 
     return this.authService.findOrCreateUserFromFacebook(facebookUser.profile);
+  }
+
+  @ApiOperation({ summary: 'Login with Google' })
+  @ApiResponse({ status: 200, type: String })
+  @UseGoogleAuth()
+  @Get('/google')
+  loginWithGoogle() {
+    return 'Login with Google';
+  }
+
+  @ApiOperation({ summary: 'Redirect from Google if login OK' })
+  @ApiResponse({ status: 200, type: String })
+  @UseGoogleAuth()
+  @Get('/google/redirect')
+  googleCallback(@Req() req: any) {
+    const result: GoogleAuthResult = req.hybridAuthResult;
+
+    const gooogleUser = {
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      profile: result.profile,
+    };
+
+    return this.authService.findOrCreateUserFromGoogle(gooogleUser.profile);
   }
 }
