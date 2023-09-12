@@ -62,15 +62,13 @@ export class CreateReviewDto {
   })
   readonly reviewRating: number;
 
-  // @IsNumber()
-  // @IsNotEmpty()
-  // @Min(5, { message: 'Review author ID is too short' })
-  // @Max(100, { message: 'Review author ID is too long' })
-  // @ApiProperty({
-  //   example: 'Review author ID',
-  //   description: 'Review author ID',
-  // })
-  // readonly userId: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({
+    example: 'Review like',
+    description: 'Review like start count',
+  })
+  readonly like: number = 0;
 
   @IsString()
   @MinLength(1, { message: 'Product Name is too short' })

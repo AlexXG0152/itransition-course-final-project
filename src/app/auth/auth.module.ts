@@ -5,10 +5,12 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from 'config/configuration';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { FacebookStrategy } from './strategies/facebook.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, GoogleStrategy, FacebookStrategy],
   imports: [
     forwardRef(() => UsersModule),
     JwtModule.registerAsync({
