@@ -18,9 +18,7 @@ export async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
-      'https://accounts.google.com',
-      'https://www.facebook.com',
-      '*',
+      'https://itransition-course-final-project-back.onrender.com/api/v1/auth/facebook',
     ],
     credentials: true,
   });

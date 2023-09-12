@@ -62,6 +62,13 @@ export class CreateReviewDto {
   })
   readonly reviewRating: number;
 
+  @IsNumber()
+  @ApiProperty({
+    example: 'Review like count',
+    description: 'Review start like count 0',
+  })
+  readonly like: number = 0;
+
   // @IsNumber()
   // @IsNotEmpty()
   // @Min(5, { message: 'Review author ID is too short' })
