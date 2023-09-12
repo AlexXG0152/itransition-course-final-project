@@ -50,6 +50,7 @@ export class AuthController {
       profile: result.profile,
     };
 
+
     console.log(facebookUser);
 
     return this.authService.findOrCreateUserFromSocial(
