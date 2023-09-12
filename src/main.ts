@@ -12,12 +12,19 @@ export async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    allowedHeaders: ['content-type', 'authorization'],
+    allowedHeaders: [
+      'content-type',
+      'authorization',
+      'access-control-allow-origin',
+      'access-control-allow-credentials',
+    ],
     origin: [
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
     ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     credentials: true,
+    optionsSuccessStatus: 204,
   });
 
   const swaggerConfig = new DocumentBuilder()

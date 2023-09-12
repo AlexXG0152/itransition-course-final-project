@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -42,12 +43,12 @@ export class AuthController {
   @ApiResponse({ status: 200, type: String })
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  googleLoginCallback(@Req() req, @Res() res) {
-    const user: any = req.user;
-    if (user)
-      res.redirect(
-        'http://localhost:4200/review/latest?quantity=10&offset=0&orderBy=createdAt&direction=DESC',
-      );
+  async googleLoginCallback(@Req() req: Request, @Res() res: Response) {
+    const loginData: any = req.user;
+    const user = await this.authService.findOrCreateUserFromSocial(loginData);
+
+    if (user.token) return res.json(user);
+    // res.redirect();
     else res.redirect('http://localhost:4200/auth/register');
   }
 
@@ -61,12 +62,12 @@ export class AuthController {
   @ApiResponse({ status: 200, type: String })
   @Get('/facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  facebookLoginCallback(@Req() req, @Res() res) {
-    const user: any = req.user;
-    if (user)
-      res.redirect(
-        'http://localhost:4200/review/latest?quantity=10&offset=0&orderBy=createdAt&direction=DESC',
-      );
+  async facebookLoginCallback(@Req() req: Request, @Res() res: Response) {
+    const loginData: any = req.user;
+    const user = await this.authService.findOrCreateUserFromSocial(loginData);
+
+    if (user.token) return res.json(user);
+    // res.redirect();
     else res.redirect('http://localhost:4200/auth/register');
   }
 }
