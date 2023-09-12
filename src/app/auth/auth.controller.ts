@@ -32,15 +32,36 @@ export class AuthController {
     return this.authService.registration(userDto);
   }
 
+  @ApiOperation({ summary: 'Login to app using Google account' })
+  @ApiResponse({ status: 200, type: String })
   @Get('/google')
   @UseGuards(AuthGuard('google'))
-  googleLogin() {
-    console.log('// initiates the Google OAuth2 login flow');
-  }
+  googleLogin() {}
 
+  @ApiOperation({ summary: 'Login to app using Google account' })
+  @ApiResponse({ status: 200, type: String })
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Req() req, @Res() res) {
+    const user: any = req.user;
+    if (user)
+      res.redirect(
+        'http://localhost:4200/review/latest?quantity=10&offset=0&orderBy=createdAt&direction=DESC',
+      );
+    else res.redirect('http://localhost:4200/auth/register');
+  }
+
+  @ApiOperation({ summary: 'Login to app using Facebook account' })
+  @ApiResponse({ status: 200, type: String })
+  @Get('/facebook')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLogin() {}
+
+  @ApiOperation({ summary: 'Login to app using Facebook account' })
+  @ApiResponse({ status: 200, type: String })
+  @Get('/facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLoginCallback(@Req() req, @Res() res) {
     const user: any = req.user;
     if (user)
       res.redirect(
