@@ -3,6 +3,8 @@ import { Op } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './entities/review.entity';
 import { Comment } from '../comments/entities/comment.entity';
+import { IReviewSearchResult } from './interfaces/reviewSearchResult.interface';
+import { ICommentSearchResult } from './interfaces/commentSearchResult.interface';
 
 @Injectable()
 export class FullTextSearchService {
@@ -11,14 +13,12 @@ export class FullTextSearchService {
     @InjectModel(Comment) private commentRepository: typeof Comment,
   ) {}
 
-  async findAllByFullTextSearch(query: string): Promise<{
-    reviews: Review[];
-    comments: Comment[];
-  }> {
+  async findAllByFullTextSearch(
+    query: string,
+  ): Promise<(IReviewSearchResult | ICommentSearchResult)[]> {
     try {
-      const reviews = await this.reviewRepository
-        .scope('fullTextSearch')
-        .findAll({
+      const [reviews, comments] = await Promise.all([
+        this.reviewRepository.scope('fullTextSearch').findAll({
           where: {
             [Op.or]: [
               { title: { [Op.like]: `%${query}%` } },
@@ -28,11 +28,8 @@ export class FullTextSearchService {
           replacements: {
             query: query,
           },
-        });
-
-      const comments = await this.commentRepository
-        .scope('fullTextSearch')
-        .findAll({
+        }),
+        this.commentRepository.scope('fullTextSearch').findAll({
           where: {
             [Op.or]: [
               { commentTitle: { [Op.like]: `%${query}%` } },
@@ -42,9 +39,27 @@ export class FullTextSearchService {
           replacements: {
             query: query,
           },
-        });
+          include: [Review],
+        }),
+      ]);
 
-      return { reviews, comments };
+      const result = [
+        ...reviews.map((review) => ({
+          reviewId: review.id,
+          title: review.title,
+          content: review.content,
+          from: 'review',
+        })),
+        ...comments.map((comment) => ({
+          commentTitle: comment.commentTitle,
+          commentText: comment.commentText,
+          reviewId: comment.reviewId,
+          title: comment.review.title,
+          from: 'comments',
+        })),
+      ];
+
+      return result;
     } catch (error) {
       console.error(error);
     }
