@@ -37,8 +37,14 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  findOneByID(@Param('id') id: string) {
+    return this.productService.findOneByID(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/search/:name')
+  findOneByName(@Param('name') name: string) {
+    return this.productService.findOneByTitle(name);
   }
 
   @UseGuards(JwtAuthGuard)

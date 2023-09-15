@@ -23,17 +23,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
     example: 'Review title',
     description: 'Review title from 1 symbol',
   })
-  readonly title: string;
-
-  // @IsString()
-  // @IsNotEmpty()
-  // @MinLength(5, { message: 'Review work category name is too short' })
-  // @MaxLength(100, { message: 'Review work category name is too long' })
-  // @ApiProperty({
-  //   example: 'Review work category name',
-  //   description: 'Review work category name from 1 to 100 symbols',
-  // })
-  // readonly category: string;
+  readonly title?: string;
 
   @IsArray()
   @IsNotEmpty()
@@ -41,7 +31,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   @ArrayMaxSize(10, { message: 'Review tags is too long' })
   @ApiProperty({
     example: 'Review tags',
-    description: 'Review tags from 1 to 10 tags',
+    description: 'Review tags from 1 to 255 symbols',
   })
   readonly tags: any[];
 
@@ -53,7 +43,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
     example: 'Review content',
     description: 'Review content from 1 to 16777215 symbols',
   })
-  readonly content: string;
+  readonly content?: string;
 
   @IsString()
   @IsOptional()
@@ -64,7 +54,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   })
   readonly imageslinks?: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   @Min(0, { message: 'Review author rating mark is too low' })
   @Max(10, { message: 'Review author rating mark is too hight' })
@@ -72,24 +62,41 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
     example: 'Review author rating mark',
     description: 'Review author rating mark from 0 to 10',
   })
-  readonly reviewRating: number;
+  readonly reviewRating?: number;
 
   @IsString()
+  @IsOptional()
   @MinLength(1, { message: 'Product Name is too short' })
   @MaxLength(255, { message: 'Product Name is too long' })
   @ApiProperty({
     example: 'Product Name',
     description: 'Product Name text',
   })
-  readonly productTitle: string;
+  readonly productTitle?: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   @Min(1, { message: 'Review product ID is too short' })
   @Max(100, { message: 'Review product ID is too long' })
   @ApiProperty({
     example: 'Review product ID',
     description: 'Review product ID',
   })
-  readonly productId: number;
+  readonly productId?: number;
+
+  @IsNumber()
+  @ApiProperty({
+    example: 'Review product category ID',
+    description: 'Review product category ID',
+  })
+  readonly categoryId?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({
+    example: 'Review product subcategory ID',
+    description: 'Review product subcategory ID',
+  })
+  readonly subcategoryId?: number;
 }

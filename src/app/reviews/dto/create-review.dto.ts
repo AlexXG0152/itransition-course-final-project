@@ -31,7 +31,7 @@ export class CreateReviewDto {
     example: 'Review tags',
     description: 'Review tags from 1 to 255 symbols',
   })
-  readonly tags: string[];
+  readonly tags: any[];
 
   @IsString()
   @IsNotEmpty()

@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumber,
-  // IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -10,14 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateProductDto {
-  // @IsNumber()
-  // @IsNotEmpty()
-  // @ApiProperty({
-  //   example: 'Product ID',
-  //   description: 'Product ID',
-  // })
-  // id: number;
-
   @IsString()
   @IsNotEmpty()
   @MinLength(1, { message: 'Product Title is too short' })
