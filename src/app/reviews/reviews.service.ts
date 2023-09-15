@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -157,6 +157,7 @@ export class ReviewsService {
       });
     } catch (error) {
       console.error(error);
+      throw new NotFoundException();
     }
   }
 
@@ -186,9 +187,25 @@ export class ReviewsService {
 
   async update(id: number, updateReviewDto: UpdateReviewDto) {
     try {
-      return await this.reviewRepository.update(updateReviewDto, {
-        where: { id },
-      });
+      const review = await this.reviewRepository.findByPk(id);
+      if (!review) return;
+
+      await this.reviewRepository.update(updateReviewDto, { where: { id } });
+
+      if (updateReviewDto.tags && updateReviewDto.tags.length > 0) {
+        const tagModels = await Promise.all(
+          updateReviewDto.tags.map((tagName) =>
+            this.tagRepository.findOrCreate({ where: { name: tagName } }),
+          ),
+        );
+
+        const associatedTags = tagModels.map((tagModel) => tagModel[0]);
+        await review.$set('tags', associatedTags);
+      }
+
+      await review.save();
+
+      return review;
     } catch (error) {
       console.error(error);
     }

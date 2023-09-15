@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import sequelize from 'sequelize';
+import sequelize, { Op } from 'sequelize';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -49,7 +49,7 @@ export class ProductsService {
     }
   }
 
-  async findOne(id: number) {
+  async findOneByID(id: number) {
     try {
       return await this.productRepository.findByPk(id, {
         include: [Review, Category, Subcategory, Rating],
@@ -57,6 +57,13 @@ export class ProductsService {
     } catch (error) {
       console.error(error);
     }
+  }
+  async findOneByTitle(name: string) {
+    try {
+      return await this.productRepository.findAll({
+        where: { productTitle: { [Op.like]: `%${name}%` } },
+      });
+    } catch (error) {}
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {

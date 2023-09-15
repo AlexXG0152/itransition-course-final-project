@@ -66,34 +66,19 @@ export class UsersService {
 
   async findOne(id: number): Promise<IUser> {
     try {
-      const user = await this.userRepository.findOne({
+      const user: any = await User.findOne({
         where: { id },
+        include: { all: true },
         attributes: {
-          exclude: ['password'],
-          include: [
-            [
-              Sequelize.cast(
-                Sequelize.fn('SUM', Sequelize.col('reviews.like')),
-                'SIGNED',
-              ),
-              'totalLikes',
-            ],
-          ],
+          exclude: ['password', 'banreason', 'unbanreason'],
         },
-        include: [
-          {
-            model: Review,
-            attributes: [],
-            where: { like: { [Op.ne]: null } },
-            required: false,
-          },
-        ],
-        raw: true,
-        nest: true,
       });
 
       if (user) {
-        delete user.reviews;
+        const totalLikes = await Review.sum('like', {
+          where: { userId: user.id },
+        });
+        user.dataValues.totalLikes = totalLikes;
       }
 
       return user;
