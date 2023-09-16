@@ -32,7 +32,7 @@ export class FullTextSearchService {
         this.commentRepository.scope('fullTextSearch').findAll({
           where: {
             [Op.or]: [
-              { commentTitle: { [Op.like]: `%${query}%` } },
+              // { commentTitle: { [Op.like]: `%${query}%` } },
               { commentText: { [Op.like]: `%${query}%` } },
             ],
           },
@@ -51,7 +51,7 @@ export class FullTextSearchService {
           from: 'review',
         })),
         ...comments.map((comment) => ({
-          commentTitle: comment.commentTitle,
+          // commentTitle: comment.commentTitle,
           commentText: comment.commentText,
           reviewId: comment.reviewId,
           title: comment.review.title,

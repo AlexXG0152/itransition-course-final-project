@@ -4,19 +4,19 @@ import {
   IsNotEmpty,
   IsString,
   MinLength,
-  MaxLength,
+  // MaxLength,
 } from 'class-validator';
 
 export class CreateCommentDto {
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1, { message: 'Comment Title is too short' })
-  @MaxLength(255, { message: 'Comment Title is too long' })
-  @ApiProperty({
-    example: 'Comment title',
-    description: 'Comment title from 1 to 255',
-  })
-  commentTitle: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // @MinLength(1, { message: 'Comment Title is too short' })
+  // @MaxLength(255, { message: 'Comment Title is too long' })
+  // @ApiProperty({
+  //   example: 'Comment title',
+  //   description: 'Comment title from 1 to 255',
+  // })
+  // commentTitle: string;
 
   @IsString()
   @IsNotEmpty()

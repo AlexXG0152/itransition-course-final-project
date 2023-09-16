@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  MaxLength,
+  // MaxLength,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -18,15 +18,15 @@ export class UpdateCommentDto extends PartialType(CreateCommentDto) {
   })
   id: number;
 
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1, { message: 'Comment Title is too short' })
-  @MaxLength(255, { message: 'Comment Title is too long' })
-  @ApiProperty({
-    example: 'Comment title',
-    description: 'Comment title from 1 to 255',
-  })
-  commentTitle: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // @MinLength(1, { message: 'Comment Title is too short' })
+  // @MaxLength(255, { message: 'Comment Title is too long' })
+  // @ApiProperty({
+  //   example: 'Comment title',
+  //   description: 'Comment title from 1 to 255',
+  // })
+  // commentTitle: string;
 
   @IsString()
   @IsNotEmpty()

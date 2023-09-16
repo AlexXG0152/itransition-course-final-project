@@ -1,5 +1,5 @@
 export interface ICommentSearchResult {
-  commentTitle: string;
+  // commentTitle: string;
   commentText: string;
   reviewId: number;
   title: string;

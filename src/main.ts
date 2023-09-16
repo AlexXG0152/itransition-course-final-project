@@ -21,6 +21,7 @@ export async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'https://itransition-course-final-project-front.onrender.com',
+      '*',
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     credentials: true,

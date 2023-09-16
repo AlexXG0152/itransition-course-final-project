@@ -31,21 +31,21 @@ export class Comment extends Model<Comment> {
   })
   id: number;
 
-  @ApiProperty({
-    example: 'Comment Title',
-    description: 'Comment title from 1 to 255 symbols',
-  })
-  @Index({ type: 'FULLTEXT', name: 'title_content' })
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      len: [1, 255],
-    },
-  })
-  commentTitle: string;
+  // @ApiProperty({
+  //   example: 'Comment Title',
+  //   description: 'Comment title from 1 to 255 symbols',
+  // })
+  // @Index({ type: 'FULLTEXT', name: 'title_content' })
+  // @Column({
+  //   type: DataType.STRING,
+  //   allowNull: false,
+  //   validate: {
+  //     notNull: true,
+  //     notEmpty: true,
+  //     len: [1, 255],
+  //   },
+  // })
+  // commentTitle: string;
 
   @ApiProperty({ example: 'Comment Text', description: 'Comment text' })
   @Index({ type: 'FULLTEXT', name: 'title_content' })
