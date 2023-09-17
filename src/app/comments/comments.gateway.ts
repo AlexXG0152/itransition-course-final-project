@@ -10,7 +10,10 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 
 @WebSocketGateway({
   path: 'comments/events',
-  cors: { credentials: true, origin: ['http://localhost:4200'] },
+  cors: {
+    credentials: true,
+    origin: [process.env.HOST],
+  },
 })
 export class CommentsGateway implements OnGatewayConnection {
   constructor(private commentService: CommentsService) {}
@@ -20,7 +23,6 @@ export class CommentsGateway implements OnGatewayConnection {
   connections: Socket[] = [];
 
   handleConnection(socket: Socket) {
-    console.log('ok');
     this.connections.push(socket);
   }
 
@@ -42,6 +44,4 @@ export class CommentsGateway implements OnGatewayConnection {
       this.connections.splice(disconnectedSocketIndex, 1);
     }
   }
-
-  // Дополнительные методы для получения комментариев из БД и отправки их клиенту
 }

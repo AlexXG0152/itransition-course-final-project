@@ -9,6 +9,8 @@ import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
 import { Like } from './entities/like.entity';
+import { User } from '../users/entities/user.entity';
+import { Sequelize } from 'sequelize';
 
 @Injectable()
 export class ReviewsService {
@@ -126,8 +128,31 @@ export class ReviewsService {
             model: Comment,
             as: 'comments',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: ['deletedAt'],
             },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: {
+                  exclude: [
+                    'createdAt',
+                    'updatedAt',
+                    'deletedAt',
+                    'banreason',
+                    'password',
+                    'unbanreason',
+                    'email',
+                  ],
+                  include: [
+                    [
+                      Sequelize.fn('SUM', Sequelize.literal('review.like')),
+                      'totalLikes',
+                    ],
+                  ],
+                },
+              },
+            ],
           },
           {
             model: Category,
@@ -154,6 +179,7 @@ export class ReviewsService {
             },
           },
         ],
+        group: ['Review.id', 'comments.id', 'tags.id'],
       });
     } catch (error) {
       console.error(error);

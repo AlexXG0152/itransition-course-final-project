@@ -4,6 +4,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Comment } from '../comments/entities/comment.entity';
 import { Review } from '../reviews/entities/review.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class CommentsService {
@@ -22,7 +23,34 @@ export class CommentsService {
 
   async findAll() {
     try {
-      return this.commentRepository.findAll({ include: [Review] });
+      return this.commentRepository.findAll({
+        include: [
+          {
+            model: Review,
+            as: 'review',
+            attributes: {
+              exclude: ['deletedAt'],
+            },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: {
+                  exclude: [
+                    'createdAt',
+                    'updatedAt',
+                    'deletedAt',
+                    'banreason',
+                    'password',
+                    'unbanreason',
+                    'email',
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      });
     } catch (error) {
       console.error(error);
     }
@@ -30,7 +58,34 @@ export class CommentsService {
 
   async findOne(id: number) {
     try {
-      return this.commentRepository.findByPk(id, { include: [Review] });
+      return this.commentRepository.findByPk(id, {
+        include: [
+          {
+            model: Review,
+            as: 'review',
+            attributes: {
+              exclude: ['deletedAt'],
+            },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: {
+                  exclude: [
+                    'createdAt',
+                    'updatedAt',
+                    'deletedAt',
+                    'banreason',
+                    'password',
+                    'unbanreason',
+                    'email',
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      });
     } catch (error) {
       console.error(error);
     }

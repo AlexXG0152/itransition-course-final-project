@@ -18,11 +18,7 @@ export async function bootstrap() {
       'access-control-allow-origin',
       'access-control-allow-credentials',
     ],
-    origin: [
-      'http://localhost:4200',
-      'https://itransition-course-final-project-front.onrender.com',
-      '*',
-    ],
+    origin: [process.env.HOST],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     credentials: true,
     optionsSuccessStatus: 204,

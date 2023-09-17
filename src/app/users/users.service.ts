@@ -12,6 +12,13 @@ import { Sequelize } from 'sequelize-typescript';
 import { Review } from '../reviews/entities/review.entity';
 import { Op } from 'sequelize';
 import { IUser } from './interfaces/user.interface';
+import { Category } from '../product/entities/category.entity';
+import { Product } from '../product/entities/product.entity';
+import { Subcategory } from '../product/entities/subcategory.entity';
+import { Like } from '../reviews/entities/like.entity';
+import { Comment } from '../comments/entities/comment.entity';
+import { Rating } from '../product/entities/rating.entity';
+import { Role } from '../roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -35,7 +42,6 @@ export class UsersService {
   async findAll() {
     try {
       const users = await this.userRepository.findAll({
-        // include: { all: true },
         include: [
           {
             model: Review,
@@ -102,7 +108,65 @@ export class UsersService {
     try {
       const user: any = await User.findOne({
         where: { id: req.user.id },
-        include: { all: true },
+        include: [
+          {
+            model: Review,
+            as: 'reviews',
+            include: [
+              {
+                model: Category,
+                attributes: ['name'],
+              },
+              {
+                model: Subcategory,
+                attributes: ['name'],
+              },
+            ],
+          },
+          {
+            model: Comment,
+            as: 'comments',
+            attributes: {
+              exclude: ['deletedAt'],
+            },
+            include: [
+              {
+                model: Review,
+                attributes: ['title'],
+              },
+            ],
+          },
+          {
+            model: Rating,
+            as: 'ratings',
+            attributes: {
+              exclude: ['updatedAt', 'deletedAt'],
+            },
+            include: [
+              {
+                model: Product,
+                attributes: ['productTitle'],
+              },
+            ],
+          },
+          {
+            model: Like,
+            as: 'likes',
+            attributes: {
+              exclude: ['id', 'updatedAt', 'deletedAt'],
+            },
+            include: [
+              {
+                model: Review,
+                attributes: ['title'],
+              },
+            ],
+          },
+          {
+            model: Role,
+            as: 'roles',
+          },
+        ],
         attributes: {
           exclude: ['password', 'banreason', 'unbanreason'],
         },
@@ -193,39 +257,3 @@ export class UsersService {
     }
   }
 }
-
-// {
-//   model: Role,
-//   as: 'roles',
-//   attributes: {
-//     exclude: ['id', 'createdAt', 'updatedAt', 'deletedAt'],
-//   },
-// },
-// {
-//   model: Review,
-//   as: 'reviews',
-//   attributes: {
-//     exclude: ['updatedAt', 'deletedAt'],
-//   },
-// },
-// {
-//   model: Comment,
-//   as: 'comments',
-//   attributes: {
-//     exclude: ['deletedAt'],
-//   },
-// },
-// {
-//   model: Rating,
-//   as: 'ratings',
-//   attributes: {
-//     exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-//   },
-// },
-// {
-//   model: Like,
-//   as: 'likes',
-//   attributes: {
-//     exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-//   },
-// },
