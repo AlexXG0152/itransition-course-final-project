@@ -11,7 +11,7 @@ export interface IUser {
   ratings?: RatingsEntity[] | null;
   comments?: CommentsEntity[] | null;
   likes?: LikesEntity[] | null;
-  totalLikes?: number;
+  receivedLikes: number;
 }
 export interface RolesEntity {
   id: number;

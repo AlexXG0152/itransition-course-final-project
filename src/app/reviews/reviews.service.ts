@@ -10,7 +10,6 @@ import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
 import { Like } from './entities/like.entity';
 import { User } from '../users/entities/user.entity';
-import { Sequelize } from 'sequelize';
 
 @Injectable()
 export class ReviewsService {
@@ -143,12 +142,6 @@ export class ReviewsService {
                     'password',
                     'unbanreason',
                     'email',
-                  ],
-                  include: [
-                    [
-                      Sequelize.fn('SUM', Sequelize.literal('review.like')),
-                      'totalLikes',
-                    ],
                   ],
                 },
               },

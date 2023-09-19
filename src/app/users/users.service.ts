@@ -8,7 +8,7 @@ import { RolesService } from '../roles/roles.service';
 import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
-import { Sequelize } from 'sequelize-typescript';
+// import { Sequelize } from 'sequelize-typescript';
 import { Review } from '../reviews/entities/review.entity';
 import { Op } from 'sequelize';
 import { IUser } from './interfaces/user.interface';
@@ -52,15 +52,15 @@ export class UsersService {
         ],
         attributes: {
           exclude: ['password'],
-          include: [
-            [
-              Sequelize.cast(
-                Sequelize.fn('SUM', Sequelize.col('reviews.like')),
-                'SIGNED',
-              ),
-              'totalLikes',
-            ],
-          ],
+          // include: [
+          //   [
+          //     Sequelize.cast(
+          //       Sequelize.fn('SUM', Sequelize.col('reviews.like')),
+          //       'SIGNED',
+          //     ),
+          //     'totalLikes',
+          //   ],
+          // ],
         },
         group: ['User.id'],
       });
@@ -80,12 +80,12 @@ export class UsersService {
         },
       });
 
-      if (user) {
-        const totalLikes = await Review.sum('like', {
-          where: { userId: user.id },
-        });
-        user.dataValues.totalLikes = totalLikes;
-      }
+      // if (user) {
+      //   const totalLikes = await Review.sum('like', {
+      //     where: { userId: user.id },
+      //   });
+      //   user.dataValues.totalLikes = totalLikes;
+      // }
 
       return user;
     } catch (error) {
@@ -171,13 +171,6 @@ export class UsersService {
           exclude: ['password', 'banreason', 'unbanreason'],
         },
       });
-
-      if (user) {
-        const totalLikes = await Review.sum('like', {
-          where: { userId: user.id },
-        });
-        user.dataValues.totalLikes = totalLikes;
-      }
 
       return user;
     } catch (error) {

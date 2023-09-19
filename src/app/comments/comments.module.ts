@@ -8,6 +8,7 @@ import { RolesModule } from '../roles/roles.module';
 import { User } from '../users/entities/user.entity';
 import { Comment } from '../comments/entities/comment.entity';
 import { CommentsGateway } from './comments.gateway';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   controllers: [CommentsController],
@@ -16,6 +17,7 @@ import { CommentsGateway } from './comments.gateway';
     SequelizeModule.forFeature([User, Review, Comment]),
     RolesModule,
     forwardRef(() => AuthModule),
+    forwardRef(() => UsersModule),
   ],
   exports: [CommentsService],
 })

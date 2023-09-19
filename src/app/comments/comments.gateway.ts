@@ -3,37 +3,42 @@ import {
   WebSocketServer,
   SubscribeMessage,
   OnGatewayConnection,
+  MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 
 @WebSocketGateway({
-  path: 'comments/events',
+  path: '/api/v1/comments/events/',
   cors: {
     credentials: true,
-    origin: [process.env.HOST],
+    // origin: [process.env.HOST],
   },
 })
 export class CommentsGateway implements OnGatewayConnection {
   constructor(private commentService: CommentsService) {}
+
   @WebSocketServer()
   server: Server;
 
   connections: Socket[] = [];
 
   handleConnection(socket: Socket) {
+    console.log(`Client Connected: ${socket.id}`);
     this.connections.push(socket);
   }
 
-  @SubscribeMessage('addComment')
-  async handleAddComment(client: Socket, comment: CreateCommentDto) {
-    // Логика сохранения комментария в БД с помощью Sequelize
-    // this.commentService.create(comment);
+  afterInit() {
+    console.log('Initialized');
+  }
 
-    // Отправляем новый комментарий всем подключенным клиентам
-    this.server.emit('newComment', comment);
-    console.log('sent');
+  @SubscribeMessage('addComment')
+  async handleAddComment(@MessageBody() comment: CreateCommentDto) {
+    if (comment.commentText) {
+      const newComment = await this.commentService.create(comment);
+      this.server.emit('newComment', newComment);
+    }
   }
 
   handleDisconnect(client: Socket) {

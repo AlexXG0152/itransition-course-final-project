@@ -145,7 +145,6 @@ export class ProductsService {
               [sequelize.fn('AVG', sequelize.col('ratings.rate')), 'avgRating'],
             ],
           },
-          // group: ['Product.id'],
           transaction,
         });
 
