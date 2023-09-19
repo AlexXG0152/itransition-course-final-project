@@ -105,6 +105,21 @@ export class User extends Model<User, IUserCreateAttrs> {
   })
   unbanreason: string;
 
+  @ApiProperty({
+    example: 'Received likes',
+    description: 'Received likes',
+  })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+      notNull: true,
+      notEmpty: true,
+    },
+  })
+  receivedLikes: number;
+
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
 

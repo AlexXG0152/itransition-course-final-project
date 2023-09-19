@@ -9,6 +9,7 @@ import { Category } from '../product/entities/category.entity';
 import { Subcategory } from '../product/entities/subcategory.entity';
 import { Tag } from './entities/tag.entity';
 import { Like } from './entities/like.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ReviewsService {
@@ -24,7 +25,9 @@ export class ReviewsService {
   ): Promise<Review> {
     try {
       const userId = req['user'].id;
-      if (createReviewDto.productId === 0) {
+      console.log(createReviewDto);
+
+      if (!createReviewDto.productId) {
         const productTitle = createReviewDto.productTitle;
         const categoryId = createReviewDto.categoryId;
         const subcategoryId = createReviewDto.subcategoryId;
@@ -35,6 +38,7 @@ export class ReviewsService {
         });
         createReviewDto.productId = product.id;
       }
+
       const review = await this.reviewRepository.create({
         ...createReviewDto,
         userId: userId,
@@ -126,8 +130,25 @@ export class ReviewsService {
             model: Comment,
             as: 'comments',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: ['deletedAt'],
             },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: {
+                  exclude: [
+                    'createdAt',
+                    'updatedAt',
+                    'deletedAt',
+                    'banreason',
+                    'password',
+                    'unbanreason',
+                    'email',
+                  ],
+                },
+              },
+            ],
           },
           {
             model: Category,
@@ -154,6 +175,7 @@ export class ReviewsService {
             },
           },
         ],
+        group: ['Review.id', 'comments.id', 'tags.id'],
       });
     } catch (error) {
       console.error(error);
@@ -163,6 +185,12 @@ export class ReviewsService {
 
   async getReviewsByParams(params) {
     try {
+      const whereClause = {};
+
+      if (params.categoryId) {
+        whereClause['categoryId'] = params.categoryId;
+      }
+
       return await this.reviewRepository.findAndCountAll({
         limit: +params.quantity,
         offset: +params.offset,
@@ -179,6 +207,7 @@ export class ReviewsService {
             },
           },
         ],
+        where: whereClause,
       });
     } catch (error) {
       console.error(error);

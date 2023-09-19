@@ -3,12 +3,14 @@ import sequelize from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './entities/review.entity';
 import { Like } from './entities/like.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class LikesService {
   constructor(
     @InjectModel(Review) private reviewRepository: typeof Review,
     @InjectModel(Like) private likeRepository: typeof Like,
+    @InjectModel(User) private userRepository: typeof User,
   ) {}
 
   async checkIfUserGaveLike(
@@ -64,6 +66,11 @@ export class LikesService {
         if (review) {
           review.like++;
           await review.save({ transaction });
+        }
+        const user = await this.userRepository.findByPk(req['user'].id);
+        if (user) {
+          user.receivedLikes++;
+          await user.save({ transaction });
         }
 
         await transaction.commit();

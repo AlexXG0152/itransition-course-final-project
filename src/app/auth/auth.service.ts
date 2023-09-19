@@ -51,9 +51,9 @@ export class AuthService {
   private async generateToken(user: User) {
     try {
       const payload = {
-        email: user.email,
         id: user.id,
         name: user.name,
+        email: user.email,
         roles: user.roles,
       };
       return {
@@ -76,7 +76,6 @@ export class AuthService {
         loginUserDto.password,
         user.password,
       );
-
       if (!passwordEquals) {
         throw new UnauthorizedException({ message: 'Bad email or password' });
       }

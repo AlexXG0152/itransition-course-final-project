@@ -54,14 +54,6 @@ import { ReviewTag } from './app/reviews/entities/review-tag.entity';
         Subcategory,
       ],
       autoLoadModels: true,
-      // define: {
-      //   scopes: {
-      //     excludeCreatedAtUpdateAt: {
-      //       attributes: { exclude: ['createdAt', 'updatedAt'] },
-      //     },
-      //   },
-      //   timestamps: false,
-      // },
     }),
     AuthModule,
     UsersModule,

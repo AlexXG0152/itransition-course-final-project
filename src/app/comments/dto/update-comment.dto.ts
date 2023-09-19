@@ -1,12 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCommentDto } from './create-comment.dto';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCommentDto extends PartialType(CreateCommentDto) {
@@ -17,16 +11,6 @@ export class UpdateCommentDto extends PartialType(CreateCommentDto) {
     description: 'Comment ID',
   })
   id: number;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1, { message: 'Comment Title is too short' })
-  @MaxLength(255, { message: 'Comment Title is too long' })
-  @ApiProperty({
-    example: 'Comment title',
-    description: 'Comment title from 1 to 255',
-  })
-  commentTitle: string;
 
   @IsString()
   @IsNotEmpty()

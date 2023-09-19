@@ -75,7 +75,6 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   readonly productTitle?: string;
 
   @IsNumber()
-  // @IsNotEmpty()
   @IsOptional()
   @Min(1, { message: 'Review product ID is too short' })
   @Max(100, { message: 'Review product ID is too long' })

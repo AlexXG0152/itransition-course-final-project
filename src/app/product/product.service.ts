@@ -26,12 +26,6 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    // const candidate = await this.productRepository.findByPk(
-    //   createProductDto.id,
-    // );
-    // if (candidate) {
-    //   return;
-    // }
     try {
       return await this.productRepository.create(createProductDto);
     } catch (error) {
@@ -145,7 +139,6 @@ export class ProductsService {
               [sequelize.fn('AVG', sequelize.col('ratings.rate')), 'avgRating'],
             ],
           },
-          // group: ['Product.id'],
           transaction,
         });
 
@@ -194,7 +187,6 @@ export class ProductsService {
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
-        // raw: true,
         nest: true,
       });
     } catch (error) {
@@ -215,7 +207,6 @@ export class ProductsService {
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'deletedAt'],
         },
-        // raw: true,
         nest: true,
       });
     } catch (error) {
