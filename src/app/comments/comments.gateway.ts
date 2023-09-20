@@ -30,7 +30,7 @@ export class CommentsGateway implements OnGatewayConnection {
   }
 
   afterInit() {
-    console.log('Initialized');
+    console.log('Websocket server initialized');
   }
 
   @SubscribeMessage('addComment')

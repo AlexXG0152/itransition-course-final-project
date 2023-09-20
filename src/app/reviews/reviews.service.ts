@@ -19,14 +19,14 @@ export class ReviewsService {
     @InjectModel(Tag) private tagRepository: typeof Tag,
   ) {}
 
+  excludedTimestamps = ['createdAt', 'updatedAt', 'deletedAt'];
+
   async create(
     req: Request,
     createReviewDto: CreateReviewDto,
   ): Promise<Review> {
     try {
       const userId = req['user'].id;
-      console.log(createReviewDto);
-
       if (!createReviewDto.productId) {
         const productTitle = createReviewDto.productTitle;
         const categoryId = createReviewDto.categoryId;
@@ -59,62 +59,6 @@ export class ReviewsService {
     }
   }
 
-  async findAll(): Promise<Review[]> {
-    try {
-      return await this.reviewRepository.findAll({
-        include: [
-          {
-            model: Product,
-            as: 'product',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-            },
-          },
-          {
-            model: Comment,
-            as: 'comments',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-            },
-          },
-          {
-            model: Category,
-            as: 'categoryID',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-            },
-          },
-          {
-            model: Subcategory,
-            as: 'subcategoryID',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-            },
-          },
-          {
-            model: Tag,
-            as: 'tags',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-            },
-            through: {
-              attributes: [],
-            },
-          },
-          {
-            model: Like,
-            as: 'likes',
-            attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt', 'deletedAt'],
-            },
-          },
-        ],
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   async findOne(id: number) {
     try {
       return await this.reviewRepository.findByPk(id, {
@@ -123,7 +67,7 @@ export class ReviewsService {
             model: Product,
             as: 'product',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: this.excludedTimestamps,
             },
           },
           {
@@ -154,24 +98,39 @@ export class ReviewsService {
             model: Category,
             as: 'categoryID',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: this.excludedTimestamps,
             },
           },
           {
             model: Subcategory,
             as: 'subcategoryID',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: this.excludedTimestamps,
             },
           },
           {
             model: Tag,
             as: 'tags',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: this.excludedTimestamps,
             },
             through: {
               attributes: [],
+            },
+          },
+          {
+            model: User,
+            as: 'user',
+            attributes: {
+              exclude: [
+                'password',
+                'email',
+                'banreason',
+                'unbanreason',
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+              ],
             },
           },
         ],
@@ -191,6 +150,10 @@ export class ReviewsService {
         whereClause['categoryId'] = params.categoryId;
       }
 
+      if (params.subcategoryId) {
+        whereClause['subcategoryId'] = params.subcategoryId;
+      }
+
       return await this.reviewRepository.findAndCountAll({
         limit: +params.quantity,
         offset: +params.offset,
@@ -203,7 +166,7 @@ export class ReviewsService {
             model: Product,
             as: 'product',
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+              exclude: this.excludedTimestamps,
             },
           },
         ],
@@ -243,6 +206,62 @@ export class ReviewsService {
   async remove(id: number) {
     try {
       return await this.reviewRepository.destroy({ where: { id } });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async findAll(): Promise<Review[]> {
+    try {
+      return await this.reviewRepository.findAll({
+        include: [
+          {
+            model: Product,
+            as: 'product',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+          },
+          {
+            model: Comment,
+            as: 'comments',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+          },
+          {
+            model: Category,
+            as: 'categoryID',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+          },
+          {
+            model: Subcategory,
+            as: 'subcategoryID',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+          },
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Like,
+            as: 'likes',
+            attributes: {
+              exclude: this.excludedTimestamps,
+            },
+          },
+        ],
+      });
     } catch (error) {
       console.error(error);
     }

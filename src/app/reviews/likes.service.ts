@@ -14,9 +14,9 @@ export class LikesService {
   ) {}
 
   async checkIfUserGaveLike(
-    userId: number,
     reviewId: number,
-    transaction: sequelize.Transaction,
+    userId: number,
+    transaction?: sequelize.Transaction,
   ) {
     try {
       const like = await this.likeRepository.findOne({
@@ -37,8 +37,8 @@ export class LikesService {
     const transaction = await this.reviewRepository.sequelize.transaction();
     try {
       const hasLiked = await this.checkIfUserGaveLike(
-        req['user'].id,
         reviewID,
+        req['user'].id,
         transaction,
       );
 
@@ -67,7 +67,8 @@ export class LikesService {
           review.like++;
           await review.save({ transaction });
         }
-        const user = await this.userRepository.findByPk(req['user'].id);
+
+        const user = await this.userRepository.findByPk(review.userId);
         if (user) {
           user.receivedLikes++;
           await user.save({ transaction });

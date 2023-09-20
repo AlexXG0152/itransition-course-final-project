@@ -11,10 +11,18 @@ import { Rating } from './entities/rating.entity';
 import { Like } from '../reviews/entities/like.entity';
 import { Category } from './entities/category.entity';
 import { Subcategory } from './entities/subcategory.entity';
+import { CategoryService } from './category.service';
+import { SubcategoryService } from './subcategory.service';
+import { RatingService } from './rating.service';
 
 @Module({
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [
+    ProductsService,
+    CategoryService,
+    SubcategoryService,
+    RatingService,
+  ],
   imports: [
     SequelizeModule.forFeature([
       User,
@@ -28,6 +36,11 @@ import { Subcategory } from './entities/subcategory.entity';
     RolesModule,
     forwardRef(() => AuthModule),
   ],
-  exports: [ProductsService],
+  exports: [
+    ProductsService,
+    CategoryService,
+    SubcategoryService,
+    RatingService,
+  ],
 })
 export class ProductModule {}

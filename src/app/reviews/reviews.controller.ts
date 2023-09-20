@@ -41,15 +41,13 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get All Review' })
   @ApiResponse({ status: 200, type: Review })
-  // @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.reviewsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get All Review' })
+  @ApiOperation({ summary: 'Get All Review by Query params' })
   @ApiResponse({ status: 200, type: Review })
-  // @UseGuards(JwtAuthGuard)
   @Get('/list')
   getReviewsByParams(@Query() params: any) {
     return this.reviewsService.getReviewsByParams(params);
@@ -57,7 +55,6 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get All Reviews By Tag Name' })
   @ApiResponse({ status: 200, type: Review })
-  // @UseGuards(JwtAuthGuard)
   @Get('/tags')
   getReviewsByTagName(@Query() params: any) {
     return this.tagsService.getReviewsByTag(params);
@@ -65,7 +62,6 @@ export class ReviewsController {
 
   @ApiOperation({ summary: 'Get ONE Review by ID' })
   @ApiResponse({ status: 200, type: Review })
-  // @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reviewsService.findOne(+id);
@@ -97,6 +93,14 @@ export class ReviewsController {
   @Get(':id/like')
   likeReview(@Param('id') reviewID: number, @Req() req: Request) {
     return this.likesService.likeReview(reviewID, req);
+  }
+
+  @ApiOperation({ summary: 'Is User Like Review?' })
+  @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/isLiked/:userId')
+  isLiked(@Param('id') reviewID: number, @Param('userId') userId: number) {
+    return this.likesService.checkIfUserGaveLike(reviewID, userId);
   }
 
   @ApiOperation({ summary: 'Find All Reviews By FullText Search' })

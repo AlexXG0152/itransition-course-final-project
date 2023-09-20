@@ -8,7 +8,6 @@ import { RolesService } from '../roles/roles.service';
 import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UnbanUserDto } from './dto/unban-user.dto';
-// import { Sequelize } from 'sequelize-typescript';
 import { Review } from '../reviews/entities/review.entity';
 import { Op } from 'sequelize';
 import { IUser } from './interfaces/user.interface';
@@ -52,15 +51,6 @@ export class UsersService {
         ],
         attributes: {
           exclude: ['password'],
-          // include: [
-          //   [
-          //     Sequelize.cast(
-          //       Sequelize.fn('SUM', Sequelize.col('reviews.like')),
-          //       'SIGNED',
-          //     ),
-          //     'totalLikes',
-          //   ],
-          // ],
         },
         group: ['User.id'],
       });
@@ -74,40 +64,6 @@ export class UsersService {
     try {
       const user: any = await User.findOne({
         where: { id },
-        include: { all: true },
-        attributes: {
-          exclude: ['password', 'banreason', 'unbanreason'],
-        },
-      });
-
-      // if (user) {
-      //   const totalLikes = await Review.sum('like', {
-      //     where: { userId: user.id },
-      //   });
-      //   user.dataValues.totalLikes = totalLikes;
-      // }
-
-      return user;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async findOneByEmail(email: string) {
-    try {
-      return await this.userRepository.findOne({
-        where: { email },
-        include: { all: true },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async findMe(req: any) {
-    try {
-      const user: any = await User.findOne({
-        where: { id: req.user.id },
         include: [
           {
             model: Review,
@@ -153,7 +109,7 @@ export class UsersService {
             model: Like,
             as: 'likes',
             attributes: {
-              exclude: ['id', 'updatedAt', 'deletedAt'],
+              exclude: ['updatedAt', 'deletedAt'],
             },
             include: [
               {
@@ -173,6 +129,17 @@ export class UsersService {
       });
 
       return user;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async findOneByEmail(email: string) {
+    try {
+      return await this.userRepository.findOne({
+        where: { email },
+        include: { all: true },
+      });
     } catch (error) {
       console.error(error);
     }

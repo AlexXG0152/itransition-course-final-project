@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { configuration } from 'config/configuration';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
 import { User } from './app/users/entities/user.entity';
 import { UsersModule } from './app/users/users.module';
 import { Role } from './app/roles/entities/role.entity';
@@ -63,7 +61,7 @@ import { ReviewTag } from './app/reviews/entities/review-tag.entity';
     CommentsModule,
     FirebaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

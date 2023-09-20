@@ -1,51 +1,58 @@
 # itransition-course-final-project-backend
 
-<https://itransition-course-final-project-back.onrender.com/api/v1>
+Swagger API
 
-Web portal for reviews "what should you read/watch/play, etc."
+<https://itransition-course-final-project-back.onrender.com/api/v1/docs>
 
-САЙТ ДЛЯ УПРАВЛЕНИЯ РЕКОМЕНДАЦИЯМИ "ЧЁ ПОСМОТРЕТЬ/ЧЁ ПОЧИТАТЬ/ВО ЧТО ПОИГРАТЬ И Т.Д."
+User with admin rights
+user2@user.com
+123456789
 
-BACKEND: Node.js, NestJS, MySQL.
+Web portal for reviews "what should you read/watch/play/work, etc."
+
+SITE FOR MANAGING RECOMMENDATIONS “WHAT TO WATCH/WHAT TO READ/WHAT TO PLAY/WHOM TO WORK WITH, ETC.”
+
 FRONTEND: TypeScript/JavaScript, Angular, Bootstrap.
+BACKEND: Node.js, NestJS, MySQL.
 
-Неаутентифицированным пользователи доступен только режим read-only (доступен поиск, недоступно создание обзоров, нельзя оставлять комментарии, ставить лайки и рейтинги).
+For unauthenticated users, only read-only mode is available (search is available, creation of reviews is not available, comments, likes and ratings are not allowed).
 
-Аутентифицированные пользователи имеют доступ ко всему, кроме админки. В базовом варианте админка представляет собой список пользователей (как ссылок на их страницы).
+Authenticated users have access to everything except the admin area. In the basic version, the admin panel is a list of users (as links to their pages).
 
-Требуется поддерживать аутентификацию через социальные сети (не менее двух любых).
+It is required to support authentication through social networks (at least two of any kind).
 
-Администратор видит каждую страницу пользователя и каждый "обзор" как ее создатель (например, может отредактировать или создать от имени пользователя с его страницы новый "обзор").
+The administrator sees each user page and each “review” as its creator (for example, he can edit or create a new “review” from his page on behalf of the user).
 
-На каждой странице доступен полнотекстовый поиск по сайту (результаты поиска - всегда обозоры, например, если текст найден в комментарии, что должно быть возможно, то выводится ссылка на обзор).
+On each page, a full-text search on the site is available (the search results are always reviews, for example, if the text is found in a comment, which should be possible, then a link to the review is displayed).
 
-У каждого пользователя есть его личная страница, на которой он видит список своих обзоров (таблица с фильтраций и сортировками, возможность создать/удалить/редактировать обзор/открыть в режиме просмотра).
+Each user has his personal page, on which he sees a list of his reviews (a table with filtering and sorting, the ability to create/delete/edit a review/open in view mode).
 
-Каждый обзор состоит из: названия обзора, названия произведения (см. также требования со \*), "группа" (из фиксированного набора, например, "Кино", "Книги", "Игры" и т.п.), тэгов (вводится несколько тэгов, необходимо автодополнение - когда пользователь начинает вводить тэг, выпадает список с вариантами слов, которые уже вводились ранее на сайте), текста обзора (с поддержкой форматирования markdown), опциональное изображение-иллюстрация (хранение в облаке) и оценки от автора по 10-б. шкале.
+Each review consists of: title of the review, title of the work (see also requirements with \*), “group” (from a fixed set, for example, “Movies”, “Books”, “Games”, etc.), tags ( several tags are entered, auto-completion is necessary - when the user starts entering a tag, a list appears with options for words that have already been entered previously on the site), review text (with support for markdown formatting), an optional illustration image (stored in the cloud) and ratings from the author 10-b. scale.
 
-Все картинки сохраняются в облаке, загружаются драг-н-дропом.
+All images are saved in the cloud and loaded via drag-and-drop.
 
-На главной странице отображаются: последние добавленные обзоры, обзоры с самыми большими оценками, облако тэгов.
-Каждый пользовать может проставить "рейтинг" (1..5 звезд) произведению (не более одного от одного пользователя на один обзор) — средний пользовательский рейтинг отображается рядом с названием обзора везде на сайте.
+The main page displays: the most recently added reviews, reviews with the highest ratings, and a tag cloud.
 
-Также пользователь может поставить лайк собственно самому обзору (не более 1 на обзор от 1 пользователя), эти лайки складываются по всем обзорам пользователя и отображаются рядом с именем пользователя.
+Each user can give a “rating” (1..5 stars) to a product (no more than one from one user per review) - the average user rating is displayed next to the review title everywhere on the site.
 
-Если два пользователя описывают одно кино, это никак не связано между собой (см. требования со звездочкой).
+The user can also like the review itself (no more than 1 per review from 1 user), these likes are added up across all the user’s reviews and are displayed next to the user’s name.
 
-Под обзором в режиме просмотра (или другими пользователями) в конце отображаются комментарии. Комментарии линейные, нельзя комментировать комментарий, новый добавляется только "в хвост". Автоматическая подгрузка комментариев — если у меня открыта страница с комментариями и кто-то другой добавляет новый, он автомагически появляется (возможна задержка в 2-5 секунд).
+If two users describe the same movie, it is not related in any way (see requirements with an asterisk).
 
-Сайт должен поддерживать не менее двух языков UI: английский и другой (польский, русский, грузинский, узбекский, др.) (пользователь выбирает и выбор сохраняется). Содержимое, обзоры и комментарии, не переводятся. Сайт должен поддерживать два оформления (темы): светлое и темное (пользователь выбирает и выбор сохраняется).
+Comments are displayed at the end under the review in view mode (or by other users). Comments are linear, you cannot comment on a comment, a new one is added only “at the tail”. Automatic loading of comments - if I have a page with comments open and someone else adds a new one, it automatically appears (there may be a delay of 2-5 seconds).
 
-Обязательно: Bootstrap (или любой другой CSS-фреймворк), поддержка разных разрешений (в том числе телефон), ORM/ODM для доступа к данным, движок для полнотекстового поиск (или средствами базы, или отдельный движок — НЕ ПОЛНОЕ СКАНИРОВАНИЕ селектами).
+The site must support at least two UI languages: English and another (Polish, Russian, Georgian, Uzbek, etc.) (the user selects and the choice is saved). Content, reviews and comments are not translated. The site must support two designs (themes): light and dark (the user selects and the choice is saved).
 
-Требования со звездочкой (лишь опционально, на 10/10, после реализации остальных требований):
+Required: Bootstrap (or any other CSS framework), support for different resolutions (including phone), ORM/ODM for accessing data, an engine for full-text search (either using a database, or a separate engine - NOT FULL SCAN by selectors).
 
-- Продвинутая админка, которая позволяет позволяет управлять пользователями (просматривать, блокировать, удалять, назначать других админами).
+Requirements with an asterisk (optional only, 10/10, after other requirements are implemented):
 
-- Возможность загрузки произвольного числа иллюстраций для обзора и поддержка галереи для просмотра.
+- Advanced admin panel, which allows you to manage users (view, block, delete, assign others as admins).
 
-- Экспорт обзоров с картинками в PDF.
+- Ability to upload an arbitrary number of illustrations for review and support for a gallery for viewing.
 
-- Возможность "связывать" разные обзоры на одно произведение от разных пользователей (показывать с одного ссылки на остальные) и считать средний рейтинг. Для этого использовать отдельную сущность "произведение" и связывать обзоры с произведением (при создании обзора или выбирать существующее произведение или создавать новое).
+- Export reviews with pictures to PDF.
 
-Вы должны использовать готовые компоненты, библиотеки, контролы. Например, контрол для рендеринга маркдауна или для загрузки кортинки при помощи drag-n-drop или рендеринга облака тегов, etc.
+- The ability to “link” different reviews of one work from different users (show links from one to the others) and calculate the average rating. To do this, use a separate entity “work” and associate reviews with the work (when creating a review, either select an existing work or create a new one).
+
+You must use ready-made components, libraries, controls. For example, a control for markdown rendering or for loading an image using drag-n-drop or tag cloud rendering, etc.

@@ -14,11 +14,17 @@ export async function bootstrap() {
   app.enableCors({
     allowedHeaders: [
       'content-type',
-      'authorization',
-      'access-control-allow-origin',
-      'access-control-allow-credentials',
+      'Authorization',
+      'Accept',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Credentials',
     ],
-    origin: [process.env.HOST],
+    origin: [
+      'http://localhost:4200',
+      'http://localhost:3000',
+      'https://itransition-course-final-project-front.onrender.com',
+      'https://itransition-course-final-project-back.onrender.com',
+    ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     credentials: true,
     optionsSuccessStatus: 204,

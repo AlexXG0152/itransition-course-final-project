@@ -33,6 +33,23 @@ export class AuthController {
     return this.authService.registration(userDto);
   }
 
+  @ApiOperation({
+    summary: 'Login to app using Google account data from front',
+  })
+  @ApiResponse({ status: 200, type: String })
+  @Post('/loginWithGoogle')
+  async loginWithGoogle(@Body() loginData: any, @Res() res: Response) {
+    const user = await this.authService.findOrCreateUserFromSocial(loginData);
+
+    if (user.token) return res.status(200).send(user);
+    else res.redirect('/auth/register');
+  }
+
+
+
+
+
+  // Need to check this all this bellow again. Social logil work by lib on front
   @ApiOperation({ summary: 'Login to app using Google account' })
   @ApiResponse({ status: 200, type: String })
   @Get('/google')
@@ -47,8 +64,7 @@ export class AuthController {
     const loginData: any = req.user;
     const user = await this.authService.findOrCreateUserFromSocial(loginData);
 
-    if (user.token) return res.json(user);
-    // res.redirect();
+    if (user.token) return res.status(200).send(user);
     else res.redirect('http://localhost:4200/auth/register');
   }
 
@@ -67,7 +83,6 @@ export class AuthController {
     const user = await this.authService.findOrCreateUserFromSocial(loginData);
 
     if (user.token) return res.json(user);
-    // res.redirect();
     else res.redirect('http://localhost:4200/auth/register');
   }
 }

@@ -43,7 +43,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get USER by ID' })
+  @ApiOperation({ summary: 'Get USER by ID for ADMIN' })
   @ApiResponse({ status: 200, type: User })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
@@ -52,13 +52,13 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Get USER by ID' })
+  @ApiOperation({ summary: 'Get USER INFO for user table' })
   @ApiResponse({ status: 200, type: User })
   @Roles('USER')
   @UseGuards(JwtAuthGuard)
   @Get('/0/me')
   findMe(@Req() req: Request) {
-    return this.usersService.findMe(req);
+    return this.usersService.findOne(+req['user'].id);
   }
 
   @ApiOperation({ summary: 'Get Role to USER' })

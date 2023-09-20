@@ -15,6 +15,16 @@ export class CommentsService {
     private userService: UsersService,
   ) {}
 
+  exclude = [
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+    'banreason',
+    'password',
+    'unbanreason',
+    'email',
+  ];
+
   async create(createCommentDto: CreateCommentDto) {
     try {
       const comment = await this.commentRepository.create(createCommentDto);
@@ -50,15 +60,7 @@ export class CommentsService {
                 model: User,
                 as: 'user',
                 attributes: {
-                  exclude: [
-                    'createdAt',
-                    'updatedAt',
-                    'deletedAt',
-                    'banreason',
-                    'password',
-                    'unbanreason',
-                    'email',
-                  ],
+                  exclude: this.exclude,
                 },
               },
             ],
@@ -85,15 +87,7 @@ export class CommentsService {
                 model: User,
                 as: 'user',
                 attributes: {
-                  exclude: [
-                    'createdAt',
-                    'updatedAt',
-                    'deletedAt',
-                    'banreason',
-                    'password',
-                    'unbanreason',
-                    'email',
-                  ],
+                  exclude: this.exclude,
                 },
               },
             ],
